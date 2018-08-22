@@ -1,49 +1,27 @@
 //-----main.js---------------
-
+const tileWidth = 16;
+  const tileHeight = 16;
+  const mapWidth = 14;
+  const mapHeight = 11;
+  const gravity = 4;
 
 states = {};
 
 init = () => {
-  drawThings();
-  //stats = new Stats();
-  //stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-  //document.body.appendChild( stats.dom );
+  //drawThings();
+  stats = new Stats();
+  stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+  document.body.appendChild( stats.dom );
 
   lcg = new LCG(1019);
   drawMap();
-  state = "game";
+  state = "menu";
   last = 0;
   t = 0;
-  tileWidth = 16;
-  tileHeight = 16;
-  mapWidth = 14;
-  mapHeight = 11;
+
   audioCtx = new AudioContext;
   audioMaster = audioCtx.createGain();
-  audioMaster.connect(audioCtx.destination);
-
-  player = {
-    x:500,
-    y:500,
-    speedX: 5,
-    speedY: 5,
-    width: 4,
-    height: 4,
-    color: 25,
-
-    tx: 0,
-    ty: 0,
-    gid: 0,
-
-    draw: function() {
-      fillRect(this.x-viewX, this.y-viewY, this.x-viewX+this.width, this.y-viewY+this.height, this.color, this.color-1);
-    },
-    updatePosition: function() {
-      this.tx = this.x / tileWidth | 0;
-      this.ty = this.y / tileHeight | 0;
-      this.gid = COLLISION + this.tx + this.ty * WIDTH;
-    }
-  }
+  //audioMaster.connect(audioCtx.destination);
 
   deadzoneX = 50;
   deadzoneY = 50;
@@ -96,10 +74,11 @@ window.addEventListener('focus', function (event) {
 
 
 loop = e => {
-  //stats.begin();
+  stats.begin();
 
   if(paused){
-    
+    setColors(22,22);
+    renderTarget = SCREEN;
     text([
       'PAUSED',
       WIDTH/2,
@@ -127,7 +106,7 @@ loop = e => {
 
   render(e);
 
- // stats.end();
+ stats.end();
   requestAnimationFrame(loop);
 }
 
@@ -161,7 +140,7 @@ drawThings = e => { //hit all the api once to check true size with no dead funct
 drawMap = e => {
   renderTarget = COLLISION;
   setColors(1,1);
-  rect(0,0,WIDTH,HEIGHT, 1);
+  rect(1,1,WIDTH,HEIGHT, 1);
   for(let i = 0; i < 6000; i++){
     pset(lcg.nextIntRange(1, WIDTH), lcg.nextIntRange(1, HEIGHT));
   }
@@ -170,8 +149,12 @@ drawMap = e => {
 
 getGID = (x,y) => {
   let tx = x / tileWidth | 0;
-  let ty = y / tileHeight | 0;
+  let ty = y / tileHeight | 0;              
   return COLLISION + tx + ty * WIDTH;
 }
 
+getTile = (x,y) => {
+  return ram[getGID(x,y)];
+}
+ 
 //----- END main.js---------------

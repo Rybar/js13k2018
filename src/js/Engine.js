@@ -1067,7 +1067,6 @@ Key = {
     onKeyup(event) {
         this._released[event.keyCode] = true;
         delete this._pressed[event.keyCode];
-
     },
 
     update() {

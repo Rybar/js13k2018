@@ -32,11 +32,14 @@ var gulp          = require('gulp'),
             'src/css/*.css', 
         ],
         js: [
+            'src/js/stats.js',
             'src/js/first.js', 
             'src/js/Engine.js',
 	    'src/js/musicplayer.js',
         'src/js/assets/song.js',
         'src/js/main.js',
+        'src/js/player.js',
+        'src/js/states/menuState.js',
         'src/js/states/gameState.js',
 	    'src/js/last.js'
         ],
@@ -79,7 +82,8 @@ gulp.task('buildJS', function () {
                 ecma:6,
                 arguments:true,
                 toplevel:true,
-                unsafe_comps: true
+                unsafe_comps: true,
+                passes: 4
             }
         }))
         .pipe(gulp.dest(distPaths.build));
