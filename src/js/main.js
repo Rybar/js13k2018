@@ -1,20 +1,23 @@
 //-----main.js---------------
 const tileWidth = 16;
-  const tileHeight = 16;
-  const mapWidth = 14;
-  const mapHeight = 11;
-  const gravity = 4;
+const tileHeight = 16;
+const mapWidth = 256;
+const mapHeight = 256;
+
+switches = []; 
 
 states = {};
 
 init = () => {
-  //drawThings();
   stats = new Stats();
   stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
   document.body.appendChild( stats.dom );
 
   lcg = new LCG(1019);
+
   drawMap();
+  createSwitches();
+
   state = "menu";
   last = 0;
   t = 0;
@@ -31,11 +34,10 @@ init = () => {
   viewY = player.y-HEIGHT/2;
   
   sounds = {};
-
+  //music stuff-----------------------------------------------------
   music = new CPlayer();
   music.init(song);
   done = false;
-  
   setInterval(function () {
     if (done) {
       return;
@@ -49,9 +51,7 @@ init = () => {
       })
     }
   },0)
-    
-  //FLAGS--------------------------------------------------------------
-  paused = false;
+    paused = false;
   
    loop();
 
@@ -103,58 +103,79 @@ loop = e => {
     states[state].draw();
 
   }
-
+  Key.update();
   render(e);
 
  stats.end();
   requestAnimationFrame(loop);
 }
 
-drawThings = e => { //hit all the api once to check true size with no dead functions
-   renderTarget = UI;
-   clear(0);
-   pat=dither[0];
-   moveTo(0,0);
-   fillCircle(0,0,4,1,1);
-   fillRect(0,0,16,16,22,22);
-   rect(0,0,1,1,1,1);
-   pset(2,2);
-   line(0,0,1,1,1,1);
-   cRect(0,0,1,1,1,1,1);
-   checker(2,2,2,2,2,2,2,2);
-   circle(1,1,2,1,1);
-   triangle(0,1,0,1,0,1,1,1);
-   ellipse(1,1,2,2,1,1);
-   floodFill(2,2,UI);
-   spr(0,0,0,0,0,0,0,1);
-   rspr(0,0,0,0,0,0,0,0);
-   sspr(0,0,0,0,0,0,0,0);
-   outline(UI,UI,1,2,3,4);
-   setColors(22,0);
-   clear(0);
-   renderTarget = SCREEN;
-  
-
-}
-
 drawMap = e => {
   renderTarget = COLLISION;
   setColors(1,1);
   rect(1,1,WIDTH,HEIGHT, 1);
-  for(let i = 0; i < 6000; i++){
-    pset(lcg.nextIntRange(1, WIDTH), lcg.nextIntRange(1, HEIGHT));
+  for(let i = 0; i < 1000; i++){
+    let x = lcg.nextIntRange(1, WIDTH),
+        y = lcg.nextIntRange(1, HEIGHT);
+    fillRect(x, y, x+2, y+2);
   }
   renderTarget = SCREEN;
 }
 
-getGID = (x,y) => {
-  let tx = x / tileWidth | 0;
-  let ty = y / tileHeight | 0;              
-  return COLLISION + tx + ty * WIDTH;
+createSwitches = e => {
+
+   for(let i = 0; i < 1000; i++){
+   var x = lcg.nextIntRange(2, 255);
+   var y = lcg.nextIntRange(2, 255);
+   renderTarget = COLLISION;
+   setColors(2,2);
+   pset(x,y);
+   renderTarget = SCREEN;
+   switches.push( {
+     x: x, y: y,
+     index: getIndex(x*tileWidth,y*tileHeight),
+     color: lcg.nextIntRange(1,10),
+     state: 0 //lcg.nextIntRange(0,2)
+   })
+  }
 }
 
-getTile = (x,y) => {
-  return ram[getGID(x,y)];
+drawSwitches = e => {
+  switches.forEach(function(s){
+    //ram[s.index] = 2;
+    var y = s.y * tileHeight - viewY;
+    var x = s.x * tileWidth - viewX;
+    if(inView(x, y, tileWidth)){
+      renderTarget = SCREEN;
+      switch(s.state){
+        case 2: //overloaded/broken
+        break;
+        case 1: //on
+          y = s.y * tileHeight - viewY;
+          x = s.x * tileWidth - viewX;
+          fillRect(x+2,y+2, x+tileWidth-2, y+tileHeight-2, 22, 21);
+        break;
+        default: //off
+          
+          //
+          y = s.y * tileHeight - viewY;
+          x = s.x * tileWidth - viewX;
+          fillRect(x+2,y+2, x+tileWidth-2, y+tileHeight-2, 0, 17);    
+      }
+    }
+      
+  })
+}
+
+getIndex = (x,y) => {
+  let tx = x / tileWidth | 0;
+  let ty = y / tileHeight | 0;              
+  return COLLISION + tx + ty * mapWidth;
+}
+
+
+getGID = (x,y) => {
+  return ram[getIndex(x,y)];
 }
  
 //----- END main.js---------------

@@ -1,8 +1,9 @@
 //--------------Engine.js-------------------
+var w = window;
 
 const WIDTH =     256;
 const HEIGHT =    256;
-const PAGES =     10;  //page = 1 screen HEIGHTxWIDTH worth of screenbuffer.
+const PAGES =     20;  //page = 1 screen HEIGHTxWIDTH worth of screenbuffer.
 const PAGESIZE = WIDTH*HEIGHT;
 
 const SCREEN = 0;
@@ -11,22 +12,26 @@ const BUFFER = PAGESIZE*2;
 const BACKGROUND = PAGESIZE*3;
 const MIDGROUND = PAGESIZE*4;
 const FOREGROUND = PAGESIZE*5;
-const COLLISION = PAGESIZE*6;
+const COLLISION = PAGESIZE*9;
 const SPRITES = PAGESIZE*7;
 const UI = PAGESIZE*8;
 
+//make Math global
+const m = Math;
+Object.getOwnPropertyNames(m).forEach(n => w[n] = w[n] || m[n]);
 
 
-S=Math.sin;
 
-C=Math.cos;
+// S=Math.sin;
 
-function cos(x) { // x = 0 - 1
-  return Math.cos(x*6.28318531);
+// C=Math.cos;
+
+function cos1(x) { // x = 0 - 1
+  return cos(x*6.28318531);
 };
 
-function sin(x) {
-  return Math.sin(-x*6.28318531);
+function sin1(x) {
+  return sin(-x*6.28318531);
 }
 
 
@@ -180,13 +185,6 @@ buf =             new ArrayBuffer(imageData.data.length),
 buf8 =            new Uint8Array(buf),
 data =            new Uint32Array(buf),
 ram =             new Uint8Array(WIDTH * HEIGHT * PAGES);
-
-c2.width = WIDTH;
-c2.height = HEIGHT;
-var imageData2 =   ctx2.getImageData(0, 0, WIDTH, HEIGHT),
-buf2 =             new ArrayBuffer(imageData.data.length),
-buf82 =            new Uint8Array(buf),
-data2 =            new Uint32Array(buf),
 
 audioCtx = new AudioContext;
 
@@ -828,19 +826,19 @@ function render() {
 
   ctx.putImageData(imageData, 0, 0);
 
-  renderEffects();
-  ctx.globalCompositeOperation = 'overlay';
-  ctx.drawImage(c2, 0, 0);
+  //renderEffects();
+  //ctx.globalCompositeOperation = 'overlay';
+  //ctx.drawImage(c2, 0, 0);
 }
 
-function renderEffects() {
+/*function renderEffects() {
   let i = PAGESIZE;
   while(i--){
     data2[i] = colors[pal[ram[i+PAGESIZE]]];
   }
   imageData2.data.set(buf82);
   ctx2.putImageData(imageData2, 0, 0);
-}
+}*/
 
 //-----------txt.js----------------
 //forked from Jack Rugile's text renderer in Radius Raid: https://github.com/jackrugile/radius-raid-js13k/blob/master/js/text.js
