@@ -5,7 +5,7 @@ const mapWidth = 256;
 const mapHeight = 256;
 
 switches = []; 
-
+objects = [];
 states = {};
 
 init = () => {
@@ -153,14 +153,14 @@ drawSwitches = e => {
         case 1: //on
           y = s.y * tileHeight - viewY;
           x = s.x * tileWidth - viewX;
-          fillRect(x+2,y+2, x+tileWidth-2, y+tileHeight-2, 22, 21);
+          fillRect(x+2,y+2, x+tileWidth-2, y+tileHeight-2, s.color, 0);
         break;
         default: //off
           
           //
           y = s.y * tileHeight - viewY;
           x = s.x * tileWidth - viewX;
-          fillRect(x+2,y+2, x+tileWidth-2, y+tileHeight-2, 0, 17);    
+          fillRect(x+2,y+2, x+tileWidth-2, y+tileHeight-2, 0, 2);    
       }
     }
       
@@ -173,9 +173,19 @@ getIndex = (x,y) => {
   return COLLISION + tx + ty * mapWidth;
 }
 
-
 getGID = (x,y) => {
   return ram[getIndex(x,y)];
 }
- 
+
+drawObjects = e => {
+ objects.forEach(function(o){
+   o.draw();
+ })
+}
+updateObjects = e => {
+  objects.forEach(function(o){
+    o.update();
+  })
+}
+
 //----- END main.js---------------

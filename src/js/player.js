@@ -14,8 +14,24 @@ player = {
     ty: 0,
     gid: 0,
 
-    draw: function() {
-      fillRect(this.x-viewX, this.y-viewY, this.x-viewX+this.width, this.y-viewY+this.height, this.color, this.color-1);
+    draw: function(dt) {
+        let sx = this.x-viewX;
+        let sy = this.y-viewY;
+        let vlegmod = this.y%28 > 14 ? 0 : 1;
+        let hlegmod = this.x%20 > 10 ? 0 : 1;
+
+        let vheadmod = this.y%40 > 20 ? 0: 1;
+        
+      //rect(sx, sy, sx+this.width, sy+this.height, this.color, this.color-1);
+      fillRect(sx+1, sy+vheadmod, sx+5, sy+4+vheadmod, 22, 22); //head height
+      fillRect(sx, sy+1+vheadmod, sx+this.width, sy+3+vheadmod); //head width
+      fillRect(sx+2,sy+2, sx+4, sy+10)
+      pset(sx,sy+7) //left hand
+      pset(sx+6,sy+7) //right hand
+      line(sx+1,sy+6,sx+5,sy+6) //upper arms
+      line(sx+1, sy+10, sx+1, sy+11+vlegmod)  
+      line(sx+5, sy+10, sx+5, sy+11+!vlegmod)  
+
     },
 
     update: function() {

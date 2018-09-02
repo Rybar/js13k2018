@@ -2,6 +2,7 @@
 
     step: function(dt){
         player.update(dt);
+        updateObjects();
 
         //follow player
         if(player.x - viewX + deadzoneX > viewW){
@@ -59,6 +60,7 @@
                 }
             }
         } //end map draw loop
+        drawObjects();
         drawSwitches();
         player.draw();
 
