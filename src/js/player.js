@@ -1,7 +1,6 @@
 player = {
-    x:100,
-    y:100, 
-    index:{x:0,y:0},
+    x:24*20,
+    y:24*10, 
     oldX: 0,
     oldY: 0,
     vx: 2,
@@ -12,25 +11,26 @@ player = {
     gravity = 4,
     tx: 0,
     ty: 0,
+    steps: 0,
     gid: 0,
 
     draw: function(dt) {
         let sx = this.x-viewX;
         let sy = this.y-viewY;
-        let vlegmod = this.y%28 > 14 ? 0 : 1;
-        let hlegmod = this.x%20 > 10 ? 0 : 1;
-
-        let vheadmod = this.y%40 > 20 ? 0: 1;
+        //let vlegmod = this.y%28 > 14 || this.x%28 >14 ? 0 : 1;
+        //let hlegmod = this.x%20 > 10 ? 0 : 1;
+        let vlegmod = this.steps%28 > 14 ? 0:1;
+        let vheadmod = this.steps%40 > 20 ? 0: 1;
         
       //rect(sx, sy, sx+this.width, sy+this.height, this.color, this.color-1);
       fillRect(sx+1, sy+vheadmod, sx+5, sy+4+vheadmod, 22, 22); //head height
       fillRect(sx, sy+1+vheadmod, sx+this.width, sy+3+vheadmod); //head width
-      fillRect(sx+2,sy+2, sx+4, sy+10)
+      fillRect(sx+2,sy+2, sx+4, sy+8)
       pset(sx,sy+7) //left hand
       pset(sx+6,sy+7) //right hand
       line(sx+1,sy+6,sx+5,sy+6) //upper arms
-      line(sx+1, sy+10, sx+1, sy+11+vlegmod)  
-      line(sx+5, sy+10, sx+5, sy+11+!vlegmod)  
+      line(sx+1, sy+9, sx+1, sy+10+vlegmod)  
+      line(sx+5, sy+9, sx+5, sy+10+!vlegmod)  
 
     },
 
@@ -39,19 +39,19 @@ player = {
         player.oldY = player.y;
 
         if(Key.isDown(Key.d)|| Key.isDown(Key.RIGHT)){
-            player.x += player.vx;
+            player.x += player.vx; this.steps++;
         }
 
         else if(Key.isDown(Key.a)|| Key.isDown(Key.LEFT) || Key.isDown(Key.q)){
-            player.x -= player.vx;
+            player.x -= player.vx; this.steps++;
         }
         
         if(Key.isDown(Key.w)|| Key.isDown(Key.UP) || Key.isDown(Key.z)){
-            player.y -= player.vy;
+            player.y -= player.vy; this.steps++
         }
 
         else if(Key.isDown(Key.s)|| Key.isDown(Key.DOWN)){
-            player.y += player.vy;
+            player.y += player.vy; this.steps++
         }
 
         //--collision response--
@@ -66,9 +66,13 @@ player = {
         }
 
         if(Key.justReleased(Key.x)){
-                let tile = getGID(player.x+player.width/2, player.y+player.height/2);
+                let onSwitch = (getGID(player.x, player.y) == 2 ||
+                getGID(player.x+player.width-1, player.y) ==2 ||
+                getGID(player.x+player.width-1, player.y+player.height-1) ==2 ||
+                getGID(player.x, player.y+player.height-1) == 2 
+                )
                 //console.log(getIndex(player.x, player.y) + ', '+ tile )
-                if(tile == 2){
+                if(onSwitch){
                     foundSwitch = switches.find(function(e){return e.index == getIndex(player.x, player.y)});
                     //console.log(switches.find(function(e){return e.index == getIndex(player.x, player.y)}));
                     //console.log(getIndex(player.x, player.y))

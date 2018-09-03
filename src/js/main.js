@@ -1,22 +1,24 @@
 //-----main.js---------------
-const tileWidth = 16;
-const tileHeight = 16;
-const mapWidth = 256;
-const mapHeight = 256;
+const tileWidth = 24;
+const tileHeight = 24;
+const mapWidth = 320;
+const mapHeight = 200;
 
-switches = []; 
+switches = [];
+enemies = []; 
 objects = [];
 states = {};
+lcg = new LCG(1019);
 
 init = () => {
   stats = new Stats();
   stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
   document.body.appendChild( stats.dom );
 
-  lcg = new LCG(1019);
 
   drawMap();
   createSwitches();
+  spawnEnemies();
 
   state = "menu";
   last = 0;
@@ -24,10 +26,10 @@ init = () => {
 
   audioCtx = new AudioContext;
   audioMaster = audioCtx.createGain();
-  //audioMaster.connect(audioCtx.destination);
+  audioMaster.connect(audioCtx.destination);
 
-  deadzoneX = 50;
-  deadzoneY = 50;
+  deadzoneX = 70;
+  deadzoneY = 70;
 
   viewX = player.x-WIDTH/2;
   
@@ -113,20 +115,34 @@ loop = e => {
 drawMap = e => {
   renderTarget = COLLISION;
   setColors(1,1);
-  rect(1,1,WIDTH,HEIGHT, 1);
-  for(let i = 0; i < 1000; i++){
-    let x = lcg.nextIntRange(1, WIDTH),
-        y = lcg.nextIntRange(1, HEIGHT);
-    fillRect(x, y, x+2, y+2);
+  fillRect(0,0,WIDTH,HEIGHT, 1,1);
+  //fillRect(4,4, WIDTH-4, HEIGHT-4, 0,0);
+  for(let i = 0; i < 900; i++){
+    let x = lcg.nextIntRange(5, WIDTH-5),
+        y = lcg.nextIntRange(5, HEIGHT-5);
+        w = lcg.nextIntRange(3,12);
+        h = lcg.nextIntRange(3,12);
+    fillRect(x, y, x+w, y+h,0,0);
   }
+  for(let i = 0; i < 10; i++){
+    let x = 10//i * (WIDTH-10)/20;
+        y = i * (HEIGHT-10)/10 + 5;       
+        
+    fillRect(x, y, x+WIDTH-30, y+1,0,0);
+  }
+  fillRect(0,0,WIDTH,5,1,1);
+  fillRect(0,0,5,HEIGHT,1,1);
+  fillRect(WIDTH-5,0,WIDTH,HEIGHT,1,1);
+  fillRect(0,HEIGHT-5,5,HEIGHT,1);
   renderTarget = SCREEN;
 }
 
 createSwitches = e => {
 
-   for(let i = 0; i < 1000; i++){
-   var x = lcg.nextIntRange(2, 255);
-   var y = lcg.nextIntRange(2, 255);
+   for(let i = 0; i < 10; i++){
+   var x = lcg.nextIntRange(6, 20);
+   var y = lcg.nextIntRange(13, 16);
+   var colors = [7,7,28,18];
    renderTarget = COLLISION;
    setColors(2,2);
    pset(x,y);
@@ -134,7 +150,7 @@ createSwitches = e => {
    switches.push( {
      x: x, y: y,
      index: getIndex(x*tileWidth,y*tileHeight),
-     color: lcg.nextIntRange(1,10),
+     color: colors[lcg.nextIntRange(0,3)],
      state: 0 //lcg.nextIntRange(0,2)
    })
   }
@@ -187,5 +203,52 @@ updateObjects = e => {
     o.update();
   })
 }
+///----------------------game stuffs-------------------
+spawnEnemies = e => {
+  for(let i = 0; i < 200;i++){
+    let x = lcg.nextIntRange(5,100);
+    let y = lcg.nextIntRange(5,100);
+    if(getGID(x*tileWidth,y*tileHeight) == 0){
+      enemies.push(new Enemy(x*tileWidth,y*tileHeight,10));
+    }
+    
+  }
+}
+objects.push({
+  x: 120,
+  y: 120,
+  complete: false,
+  Off1: "TUTORIAL......OFFLINE",
+  On1:  "TUTORIAL......ONLINE",
+  Off2: "FLIP SWITCHES TO\nBRING SYSTEMS ONLINE",
+  On2: "GOOD LITTLE HELPER.\nPROCEED TO NEXT ROOM",
+  Off3: "",
+  On3: "DOOMSDAY AI....OFFLINE",
+  
+  update: function(){
+    this.complete = switches.filter(btn => btn.color == 7).every(btn => btn.state == 1);
+  },
+
+  draw: function(){
+    let sx = this.x - viewX;
+    let sy = this.y - viewY;
+    if(inView(sx,sy,WIDTH)){
+      fillRect(sx-10,sy-10,sx+140,sy+80, 1,1);
+      setColors(22,22);
+      text([
+        this.On1 + "\n" + (this.complete?this.On2:this.Off2) + "\n" + (random()<.8?this.Off3:this.On3),
+        sx, sy, 1, 9,
+        'left',
+        'top',
+        1,
+        22,
+        0
+      ]);
+    }  
+  }
+
+})
+
+
 
 //----- END main.js---------------

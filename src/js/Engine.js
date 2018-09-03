@@ -1,8 +1,8 @@
 //--------------Engine.js-------------------
 var w = window;
 
-const WIDTH =     256;
-const HEIGHT =    256;
+const WIDTH =     320;
+const HEIGHT =    200;
 const PAGES =     20;  //page = 1 screen HEIGHTxWIDTH worth of screenbuffer.
 const PAGESIZE = WIDTH*HEIGHT;
 
@@ -210,7 +210,7 @@ audioCtx = new AudioContext;
     let px = (y % 4) * 4 + (x% 4);
     let mask = pat & Math.pow(2, px);
     let pcolor = mask ? cursorColor : cursorColor2;
-    if(pcolor == 0)return;
+    //if(pcolor == 0)return;
     if(pcolor > 63)pcolor = 0;
     if(x < 0 | x > WIDTH-1) return;
     if(y < 0 | y > HEIGHT-1) return;

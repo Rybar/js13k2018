@@ -2,7 +2,7 @@
 
     step: function(dt){
         player.update(dt);
-        updateObjects();
+       // updateObjects();
 
         //follow player
         if(player.x - viewX + deadzoneX > viewW){
@@ -18,7 +18,7 @@
             viewY = player.y - deadzoneY 
         }
 
-        //player vs map
+        enemies.forEach(function(o){o.update();});
         
 
     },
@@ -60,10 +60,22 @@
                 }
             }
         } //end map draw loop
-        drawObjects();
-        drawSwitches();
+        //drawObjects();
+        //drawSwitches();
+        enemies.forEach(function(o){o.draw()});
+        
+
         player.draw();
+        //minimap
+        fillRect(WIDTH-60,HEIGHT-60,WIDTH-5,HEIGHT-5,0,0);
+        rect(WIDTH-60,HEIGHT-60,WIDTH-5,HEIGHT-5,22,22);
+        renderSource = COLLISION;
+        mapPal = [1,7];
+        spr(rx0-18,ry0-18,54,54,WIDTH-59,HEIGHT-59,0,0,mapPal);
+        setColors(22,22);
+        pset((player.x-viewX)/tileWidth+WIDTH-56+18, (player.y-viewY)/tileHeight+HEIGHT-56+18)
+
 
     }
 
-};
+}

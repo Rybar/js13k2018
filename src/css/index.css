@@ -6,10 +6,10 @@ body { margin: 0; overflow: hidden; background: #111; color: #ccc; }
     left: 50%;
     right: 0;
 
-    width: 96vmin;
-    height: 96vmin;
+    width: 960px;
+    height: 600px;
 
-    transform:translate(-50%, -25%);
+    transform:translate(-50%, -35%);
 
     image-rendering: optimizeSpeed;
     image-rendering: -moz-crisp-edges;
