@@ -9,10 +9,14 @@ player = {
     height: 10,
     color: 12,
     gravity = 4,
+    health: 100,
     tx: 0,
     ty: 0,
     steps: 0,
     gid: 0,
+    hit: false,
+    xm: 0,
+    ym: 0,
 
     draw: function(dt) {
         let sx = this.x-viewX;
@@ -35,54 +39,69 @@ player = {
     },
 
     update: function() {
-        player.oldX = player.x;
-        player.oldY = player.y;
+        this.oldX = player.x;
+        this.oldY = player.y;
+        this.xm = 1;
+        //t/his.ym = 0;
+
+        if(this.hit){
+           // console.log("i'm hit!")
+            player.health-=.1;
+            this.hit = false;
+        }
+
+        if(player.health < 0){
+            state = "gameover";
+        }
 
         if(Key.isDown(Key.d)|| Key.isDown(Key.RIGHT)){
-            player.x += player.vx; this.steps++;
+            this.x += this.vx; this.steps++; this.xm = 1; this.ym = 0;
         }
 
         else if(Key.isDown(Key.a)|| Key.isDown(Key.LEFT) || Key.isDown(Key.q)){
-            player.x -= player.vx; this.steps++;
+            this.x -= this.vx; this.steps++; this.xm = -1; this.ym = 0;
         }
         
-        if(Key.isDown(Key.w)|| Key.isDown(Key.UP) || Key.isDown(Key.z)){
-            player.y -= player.vy; this.steps++
+        else if(Key.isDown(Key.w)|| Key.isDown(Key.UP) || Key.isDown(Key.z)){
+            this.y -= this.vy; this.steps++; this.ym = -1; this.xm = 0;
         }
 
         else if(Key.isDown(Key.s)|| Key.isDown(Key.DOWN)){
-            player.y += player.vy; this.steps++
+            this.y += this.vy; this.steps++; this.ym = 1; this.xm = 0;
         }
 
         //--collision response--
-        if(getGID(player.x, player.y) == 1 ||
-           getGID(player.x+player.width-1, player.y) ==1 ||
-           getGID(player.x+player.width-1, player.y+player.height-1) ==1 ||
-           getGID(player.x, player.y+player.height-1) == 1 
+        if(getGID(this.x, this.y) == 1 ||
+           getGID(this.x+this.width, this.y) ==1 ||
+           getGID(this.x+this.width, this.y+this.height) ==1 ||
+           getGID(this.x, this.y+this.height) == 1 
            ){
-            player.xVel = 0;
-            player.x = player.oldX;
-            player.y = player.oldY;
+            //this.xVel = 0;
+            this.x = this.oldX;
+            this.y = this.oldY;
         }
 
         if(Key.justReleased(Key.x)){
-                let onSwitch = (getGID(player.x, player.y) == 2 ||
-                getGID(player.x+player.width-1, player.y) ==2 ||
-                getGID(player.x+player.width-1, player.y+player.height-1) ==2 ||
-                getGID(player.x, player.y+player.height-1) == 2 
+                let onSwitch = (getGID(this.x, this.y) == 2 ||
+                getGID(this.x+this.width-1, this.y) ==2 ||
+                getGID(this.x+this.width-1, this.y+this.height-1) ==2 ||
+                getGID(this.x, this.y+this.height-1) == 2 
                 )
-                //console.log(getIndex(player.x, player.y) + ', '+ tile )
                 if(onSwitch){
-                    foundSwitch = switches.find(function(e){return e.index == getIndex(player.x, player.y)});
-                    //console.log(switches.find(function(e){return e.index == getIndex(player.x, player.y)}));
-                    //console.log(getIndex(player.x, player.y))
-                    //switches.find(function(element){
-                    //return element.index == getIndex(player.x+2, player.y+2)
-                    //}).state = 1;
+                    foundSwitch = switches.find(function(e){return e.index == getIndex(this.x, this.y)});
                     if(foundSwitch){
                         foundSwitch.state = 1;
                     }
                 }
+        }
+        if(Key.isDown(Key.c)){
+            //console.log('bullet spawned');
+            if(t%10<1){
+                let xspeed = this.xm * 5;
+                let yspeed = this.ym * 5;
+                bullets.push(new Bullet(this.x+3,this.y+5, 5, xspeed, yspeed))
+            }
+            
         }
         
     },

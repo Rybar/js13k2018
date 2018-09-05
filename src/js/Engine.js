@@ -166,14 +166,15 @@ colors =
   0xff6286a0,
   0xff556779,
   0xff444e5a,
-  0xff343942,]
+  0xff343942,
+  0xff000000]
 
 //active palette index. maps to indices in colors[]. can alter this whenever for palette effects.
 pal =            [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,
-                  32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63];
+                  32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64];
 
 
-//paldrk =          [0,0,1,2,3,4,5,6,6,10,11,12,13,14,2,2,15,16,17,18,22,20,23,24,25,26,2,2,27,28,31,13]
+//paldrk =          [0,0,1,2,3,4,5,6,6,10,11,12,13,14,2,2,15,16,17,18,22,20,23,24,25,26,2,2,27,28,31,13,0]
 
 ctx.imageSmoothingEnabled = false;
 //ctx.mozImageSmoothingEnabled = false;
@@ -202,7 +203,7 @@ audioCtx = new AudioContext;
     cursorColor2 = color2;
   }
 
-  function pset(x,y) { //an index from colors[], 0-63
+  function pset(x,y) { //an index from colors[], 0-64
     //o[0] x
     //o[1] y
     x = x|0;
@@ -210,8 +211,8 @@ audioCtx = new AudioContext;
     let px = (y % 4) * 4 + (x% 4);
     let mask = pat & Math.pow(2, px);
     let pcolor = mask ? cursorColor : cursorColor2;
-    //if(pcolor == 0)return;
-    if(pcolor > 63)pcolor = 0;
+    if(pcolor == 64)return;
+    if(pcolor > 64)pcolor = 0;
     if(x < 0 | x > WIDTH-1) return;
     if(y < 0 | y > HEIGHT-1) return;
 

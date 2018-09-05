@@ -19,6 +19,9 @@
         }
 
         enemies.forEach(function(o){o.update();});
+        bullets.forEach(function(o){o.update();});
+        updateCollisions();
+
         
 
     },
@@ -63,10 +66,11 @@
         //drawObjects();
         //drawSwitches();
         enemies.forEach(function(o){o.draw()});
+        bullets.forEach(function(o){o.draw()});
         
 
         player.draw();
-        //minimap
+        //minimap---------------------------------------
         fillRect(WIDTH-60,HEIGHT-60,WIDTH-5,HEIGHT-5,0,0);
         rect(WIDTH-60,HEIGHT-60,WIDTH-5,HEIGHT-5,22,22);
         renderSource = COLLISION;
@@ -75,6 +79,18 @@
         setColors(22,22);
         pset((player.x-viewX)/tileWidth+WIDTH-56+18, (player.y-viewY)/tileHeight+HEIGHT-56+18)
 
+        //healthbar---------------------
+        setColors(22,22);
+        text([
+                'HEALTH', 5, 5, 1, 1,
+                'left',
+                'top',
+                1,
+                22,
+                player.hit?2:0,
+                4
+              ]);
+        fillRect(42,5,42+player.health/2,10, 64,11);
 
     }
 

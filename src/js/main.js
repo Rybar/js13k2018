@@ -7,6 +7,7 @@ const mapHeight = 200;
 switches = [];
 enemies = []; 
 objects = [];
+bullets = [];
 states = {};
 lcg = new LCG(1019);
 
@@ -17,7 +18,7 @@ init = () => {
 
 
   drawMap();
-  createSwitches();
+  //createSwitches();
   spawnEnemies();
 
   state = "menu";
@@ -133,7 +134,7 @@ drawMap = e => {
   fillRect(0,0,WIDTH,5,1,1);
   fillRect(0,0,5,HEIGHT,1,1);
   fillRect(WIDTH-5,0,WIDTH,HEIGHT,1,1);
-  fillRect(0,HEIGHT-5,5,HEIGHT,1);
+  fillRect(0,HEIGHT-5,WIDTH,HEIGHT,1);
   renderTarget = SCREEN;
 }
 
@@ -203,51 +204,81 @@ updateObjects = e => {
     o.update();
   })
 }
+updateCollisions = e => {
+  enemiesOnScreen = enemies.filter(function(enemy){
+    return inView(enemy.x - viewX, enemy.y - viewY);
+  })
+  enemiesOnScreen.forEach(function(enemy){
+      bullets.forEach(function(bullet){
+        if(rectCollision(enemy, bullet)){
+          bullet.kill();
+          enemy.hit = true;
+        }
+      })
+  })
+}
 ///----------------------game stuffs-------------------
 spawnEnemies = e => {
-  for(let i = 0; i < 200;i++){
-    let x = lcg.nextIntRange(5,100);
-    let y = lcg.nextIntRange(5,100);
+  for(let i = 0; i < 3000;i++){
+    let x = lcg.nextIntRange(0,WIDTH);
+    let y = lcg.nextIntRange(0,HEIGHT);
     if(getGID(x*tileWidth,y*tileHeight) == 0){
       enemies.push(new Enemy(x*tileWidth,y*tileHeight,10));
     }
     
   }
 }
-objects.push({
-  x: 120,
-  y: 120,
-  complete: false,
-  Off1: "TUTORIAL......OFFLINE",
-  On1:  "TUTORIAL......ONLINE",
-  Off2: "FLIP SWITCHES TO\nBRING SYSTEMS ONLINE",
-  On2: "GOOD LITTLE HELPER.\nPROCEED TO NEXT ROOM",
-  Off3: "",
-  On3: "DOOMSDAY AI....OFFLINE",
+
+rectCollision = (a, b) => {
+  let aleft = a.x,
+      aright = a.x+a.width,
+      atop = a.y,
+      abottom = a.y+a.height,
+      bleft = b.x,
+      bright = b.x+b.width,
+      btop = b.y,
+      bbottom = b.y+b.height;
+      
+  return !(bleft > aright || 
+    bright < aleft || 
+    btop > abottom ||
+    bbottom < atop);
+}
+
+// objects.push({
+//   x: 120,
+//   y: 120,
+//   complete: false,
+//   Off1: "TUTORIAL......OFFLINE",
+//   On1:  "TUTORIAL......ONLINE",
+//   Off2: "FLIP SWITCHES TO\nBRING SYSTEMS ONLINE",
+//   On2: "GOOD LITTLE HELPER.\nPROCEED TO NEXT ROOM",
+//   Off3: "",
+//   On3: "DOOMSDAY AI....OFFLINE",
   
-  update: function(){
-    this.complete = switches.filter(btn => btn.color == 7).every(btn => btn.state == 1);
-  },
+//   update: function(){
+//     this.complete = switches.filter(btn => btn.color == 7).every(btn => btn.state == 1);
+//   },
 
-  draw: function(){
-    let sx = this.x - viewX;
-    let sy = this.y - viewY;
-    if(inView(sx,sy,WIDTH)){
-      fillRect(sx-10,sy-10,sx+140,sy+80, 1,1);
-      setColors(22,22);
-      text([
-        this.On1 + "\n" + (this.complete?this.On2:this.Off2) + "\n" + (random()<.8?this.Off3:this.On3),
-        sx, sy, 1, 9,
-        'left',
-        'top',
-        1,
-        22,
-        0
-      ]);
-    }  
-  }
+//   draw: function(){
+//     let sx = this.x - viewX;
+//     let sy = this.y - viewY;
+//     if(inView(sx,sy,WIDTH)){
+//       fillRect(sx-10,sy-10,sx+140,sy+80, 1,1);
+//       setColors(22,22);
+//       text([
+//         this.On1 + "\n" + (this.complete?this.On2:this.Off2) + "\n" + (random()<.8?this.Off3:this.On3),
+//         sx, sy, 1, 9,
+//         'left',
+//         'top',
+//         1,
+//         22,
+//         0
+//       ]);
+//     }  
+//   }
 
-})
+// })
 
 
 
