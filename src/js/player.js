@@ -1,6 +1,6 @@
 player = {
-    x:24*20,
-    y:24*10, 
+    x:32*180,
+    y:32*100, 
     oldX: 0,
     oldY: 0,
     vx: 2,
@@ -55,20 +55,34 @@ player = {
         }
 
         if(Key.isDown(Key.d)|| Key.isDown(Key.RIGHT)){
-            this.x += this.vx; this.steps++; this.xm = 1; this.ym = 0;
+            this.x += this.vx; this.steps++; 
         }
 
         else if(Key.isDown(Key.a)|| Key.isDown(Key.LEFT) || Key.isDown(Key.q)){
-            this.x -= this.vx; this.steps++; this.xm = -1; this.ym = 0;
+            this.x -= this.vx; this.steps++; 
         }
         
         else if(Key.isDown(Key.w)|| Key.isDown(Key.UP) || Key.isDown(Key.z)){
-            this.y -= this.vy; this.steps++; this.ym = -1; this.xm = 0;
+            this.y -= this.vy; this.steps++; 
         }
 
         else if(Key.isDown(Key.s)|| Key.isDown(Key.DOWN)){
-            this.y += this.vy; this.steps++; this.ym = 1; this.xm = 0;
+            this.y += this.vy; this.steps++; 
         }
+    
+        if(gp){
+            if(buttonPressed(gp.buttons[3]) ) this.x+=this.vx;
+            else if(buttonPressed(gp.buttons[2]) ) this.x-=this.vx;
+            if(buttonPressed(gp.buttons[0]) ) this.y-=this.vy;
+            else if(buttonPressed(gp.buttons[1]) ) this.y+=this.vy;
+      
+            if(abs(gp.axes[0]) > .1)this.x+= this.vx * gp.axes[0]; //allow for deadzone
+            if(abs(gp.axes[1]) > .1)this.y+= this.vy * gp.axes[1];
+
+            if(abs(gp.axes[2] > .1))this.fire();
+            if(abs(gp.axes[3] > .1))this.fire();
+            
+          }
 
         //--collision response--
         if(getGID(this.x, this.y) == 1 ||
@@ -103,6 +117,14 @@ player = {
             }
             
         }
+
+        this.fire = function(){
+            if(t%7<1){
+                let xspeed = gp.axes[2] * 6, yspeed = gp.axes[3] * 6
+                bullets.push(new Bullet(this.x+3,this.y+5, 9, xspeed, yspeed))
+            }
+        }
+        
         
     },
 

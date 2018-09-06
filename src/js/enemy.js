@@ -47,7 +47,7 @@ function Enemy(x,y,health) {
             sy = this.y - viewY;
         this.following = false;
         this.biting = false;
-        let tick = t%30 < 1;
+        let tick = t%30 < 10;
         if(inView(sx, sy,24)){
             this.x += random() > .5 ? tick:-tick;
             this.y += random() > .5 ? tick:-tick;

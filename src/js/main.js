@@ -1,6 +1,6 @@
 //-----main.js---------------
-const tileWidth = 24;
-const tileHeight = 24;
+const tileWidth = 32;
+const tileHeight = 32;
 const mapWidth = 320;
 const mapHeight = 200;
 
@@ -9,13 +9,15 @@ enemies = [];
 objects = [];
 bullets = [];
 states = {};
+gp = false;
+
 lcg = new LCG(1019);
 
 init = () => {
   stats = new Stats();
   stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
   document.body.appendChild( stats.dom );
-
+  
 
   drawMap();
   //createSwitches();
@@ -73,11 +75,18 @@ window.addEventListener('blur', function (event) {
 window.addEventListener('focus', function (event) {
   paused = false;
 }, false);
+window.addEventListener("gamepadconnected", function(e) {
+  //console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
+    e.gamepad.index, e.gamepad.id,
+    e.gamepad.buttons.length, e.gamepad.axes.length;
+});
 
 
 
 loop = e => {
   stats.begin();
+  var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+gp = gamepads[0];
 
   if(paused){
     setColors(22,22);
@@ -219,7 +228,7 @@ updateCollisions = e => {
 }
 ///----------------------game stuffs-------------------
 spawnEnemies = e => {
-  for(let i = 0; i < 3000;i++){
+  for(let i = 0; i < 6000;i++){
     let x = lcg.nextIntRange(0,WIDTH);
     let y = lcg.nextIntRange(0,HEIGHT);
     if(getGID(x*tileWidth,y*tileHeight) == 0){
@@ -243,6 +252,13 @@ rectCollision = (a, b) => {
     bright < aleft || 
     btop > abottom ||
     bbottom < atop);
+}
+
+buttonPressed=(b)=>{
+  if (typeof(b) == "object") {
+    return b.pressed;
+  }
+  return b == 1.0;
 }
 
 // objects.push({
