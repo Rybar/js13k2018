@@ -8,6 +8,7 @@ switches = [];
 enemies = []; 
 objects = [];
 bullets = [];
+particles = [];
 states = {};
 gp = false;
 

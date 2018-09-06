@@ -20,6 +20,8 @@
 
         enemies.forEach(function(o){o.update();});
         bullets.forEach(function(o){o.update();});
+        particles.forEach(function(o){o.update();});
+
         updateCollisions();
 
         
@@ -67,6 +69,8 @@
         //drawSwitches();
         enemies.forEach(function(o){o.draw()});
         bullets.forEach(function(o){o.draw()});
+        particles.forEach(function(o){o.draw()});
+
         
 
         player.draw();

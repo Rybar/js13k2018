@@ -56,8 +56,8 @@ function Enemy(x,y,health) {
                 angle = atan2(ydelta, xdelta);
             if(distance < 100){
                 this.following = true;
-                this.x += cos(angle);
-                this.y += sin(angle);
+                this.x += cos(angle)*random()*.5;
+                this.y += sin(angle)*random()*.5;
             }
             if(rectCollision(this, player)){
                 player.hit = true;
