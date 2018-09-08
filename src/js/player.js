@@ -96,7 +96,7 @@ player = {
             this.y += this.vy; this.steps++; 
         }
     
-        if(gp){
+        if(gp){  //gamepad
 
             if(buttonPressed(gp.buttons[3]) ) this.x+=this.vx;
             else if(buttonPressed(gp.buttons[2]) ) this.x-=this.vx;
@@ -108,9 +108,11 @@ player = {
 
             if( (abs(gp.axes[2]) ) > .1){ this.fire(); }
             if( (abs(gp.axes[3]) ) > .1){ this.fire(); }
-            if(mouse.pressed==1){ this.mouseFire();}
             
+           
           }
+
+          if(mouse.pressed == 1){ this.mouseFire();}
 
         //--collision response--
         if(getGID(this.x, this.y) == 1 ||

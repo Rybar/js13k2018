@@ -21,13 +21,33 @@ tileng = new LCG(42);
 
 
 init = () => {
+  window.addEventListener('keyup', function (event) {
+    Key.onKeyup(event);
+  }, false);
+  window.addEventListener('keydown', function (event) {
+    Key.onKeydown(event);
+  }, false);
+  window.addEventListener('blur', function (event) {
+    paused = true;
+  }, false);
+  window.addEventListener('focus', function (event) {
+    paused = false;
+  }, false);
+  window.addEventListener('click', getMousePos);
+
+  window.addEventListener("gamepadconnected", function(e) {
+    //console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
+      e.gamepad.index, e.gamepad.id,
+      e.gamepad.buttons.length, e.gamepad.axes.length;
+  });
+
   stats = new Stats();
   stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
   document.body.appendChild( stats.dom );
-  canvas.addEventListener("mousemove", getMousePos);
-  canvas.addEventListener("mousedown", getMousePos);
+  c.addEventListener("mousemove", getMousePos);
+  c.addEventListener("mousedown", getMousePos);
+  //w.addEventListener("click", getMousePos);
   
-
   drawMap();
   createSwitches();
   spawnEnemies();
@@ -85,23 +105,7 @@ init = () => {
 }
 
 //initialize  event listeners--------------------------
-window.addEventListener('keyup', function (event) {
-  Key.onKeyup(event);
-}, false);
-window.addEventListener('keydown', function (event) {
-  Key.onKeydown(event);
-}, false);
-window.addEventListener('blur', function (event) {
-  paused = true;
-}, false);
-window.addEventListener('focus', function (event) {
-  paused = false;
-}, false);
-window.addEventListener("gamepadconnected", function(e) {
-  //console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
-    e.gamepad.index, e.gamepad.id,
-    e.gamepad.buttons.length, e.gamepad.axes.length;
-});
+
 
 
 
@@ -336,6 +340,7 @@ getMousePos = (evt) =>  {
     y: ( (evt.clientY - rect.top) * scaleY)|0,     // been adjusted to be relative to element
     pressed: evt.buttons
   }
+  console.log(mouse);
 }
 
 // objects.push({

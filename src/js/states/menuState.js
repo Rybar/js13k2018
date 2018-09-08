@@ -5,14 +5,14 @@ states.menu = {
     step: function(dt){
         this.ready = soundsReady == sndData.length;
         if(!this.musicPlaying && this.ready){
-            this.titleSong = playSound(sounds.titleSong, 1, 0, 0.5, true);
+            this.titleSong = playSound(sounds.titleSong, 1, 0, 0.4, true);
             this.musicPlaying = true;
         }
         if(Key.justReleased(Key.SPACE)){
            // console.log('space pressed');
            //playSound(sounds.titleSong, 1, 0, 0.5, true);
            state = "game";
-           this.titleSong.sound.stop();
+          // this.titleSong.sound.stop();
         }
 
     },
