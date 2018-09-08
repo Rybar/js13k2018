@@ -40,17 +40,21 @@
             ry0 = viewY/tileHeight - tilepad| 0,
             ry1 = (viewY + HEIGHT)/tileHeight + tilepad | 0;
 
-        for(let i = rx0; i < rx1; i++){
+
+        for(let i = rx0; i <rx1; i++){
             for(let j = ry0; j < ry1; j++){
                 let tile = ram[COLLISION+j * mapWidth + i];
+                tileng.seed = rx0+j * mapWidth + ry1+i;
+
                 //console.log(cell)
                 let x, y;
                 switch(tile){
                 case 1:
                         x = i * tileWidth - viewX,
                         y = j * tileHeight - viewY;
-                        fillRect(x+1,y+1, x+tileWidth-1, y+tileHeight-1, 8,7);
-                        rect(x,y,x+tileWidth+1, y+tileHeight+1, 6,7); 
+                        pat = dither[tileng.nextIntRange(0,15)];
+                        fillRect(x,y, x+tileWidth, y+tileHeight, 8,7);
+                        //rect(x,y,x+tileWidth+1, y+tileHeight+1, 6,7); 
                 break;
 
                 case 2: //switches
@@ -60,8 +64,10 @@
                 default:
                     x = i * tileWidth - viewX,
                     y = j * tileHeight - viewY;
+                    //tileng.seed = i*j;
+                    pat = dither[tileng.nextIntRange(0,15)];
                     fillRect(x,y, x+tileWidth, y+tileHeight, 2,1);
-                    rect(x,y,x+tileWidth, y+tileHeight, 2,3);
+                    //rect(x,y,x+tileWidth, y+tileHeight, 2,3);
                 }
             }
         } //end map draw loop
@@ -74,6 +80,7 @@
         
 
         player.draw();
+        
         //minimap---------------------------------------
         fillRect(WIDTH-60,HEIGHT-60,WIDTH-5,HEIGHT-5,0,0);
         rect(WIDTH-60,HEIGHT-60,WIDTH-5,HEIGHT-5,22,22);
@@ -95,7 +102,8 @@
                 4
               ]);
         fillRect(42,5,42+player.health/2,10, 64,11);
-
+        //mousecursor-----------
+        circle(mouse.x, mouse.y, 3, 22);      
     }
 
 }

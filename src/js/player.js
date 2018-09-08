@@ -38,9 +38,34 @@ player = {
 
     },
 
+    fire: function(){
+        if(t%7<1){
+            let scalar = hypot(gp.axes[2], gp.axes[3]);
+            //let xspeed = gp.axes[2] * 6, yspeed = gp.axes[3] * 6
+            let xspeed = gp.axes[2] / scalar * 6, yspeed = gp.axes[3] / scalar * 6;
+            bullets.push(new Bullet(this.x+3,this.y+5, 9, xspeed, yspeed))
+            playSound(sounds.sndGun, 1, 0, 0.5, 0);
+        }
+    },
+
+    mouseFire: function(){
+        if(t%7<1){
+            let sx = this.x - viewX;
+            let sy = this.y - viewY;
+            let dx = mouse.x - sx;
+            let dy = mouse.y - sy;
+            let scalar = hypot(dx,dy);
+            let xspeed = dx/scalar * 6, yspeed = dy/scalar * 6
+            bullets.push(new Bullet(this.x+3,this.y+5, 9, xspeed, yspeed))
+            playSound(sounds.sndGun, 0.7, 0, 0.3, 0);
+        }
+    },
+
     update: function() {
         this.oldX = player.x;
         this.oldY = player.y;
+        let sx = player.x - viewX;
+        let sy = player.y - viewY;
         this.xm = 1;
         //t/his.ym = 0;
 
@@ -62,7 +87,7 @@ player = {
             this.x -= this.vx; this.steps++; 
         }
         
-        else if(Key.isDown(Key.w)|| Key.isDown(Key.UP) || Key.isDown(Key.z)){
+        if(Key.isDown(Key.w)|| Key.isDown(Key.UP) || Key.isDown(Key.z)){
             this.y -= this.vy; this.steps++; 
         }
 
@@ -71,6 +96,7 @@ player = {
         }
     
         if(gp){
+
             if(buttonPressed(gp.buttons[3]) ) this.x+=this.vx;
             else if(buttonPressed(gp.buttons[2]) ) this.x-=this.vx;
             if(buttonPressed(gp.buttons[0]) ) this.y-=this.vy;
@@ -79,8 +105,9 @@ player = {
             if(abs(gp.axes[0]) > .1)this.x+= this.vx * gp.axes[0]; //allow for deadzone
             if(abs(gp.axes[1]) > .1)this.y+= this.vy * gp.axes[1];
 
-            if(abs(gp.axes[2] > .1))this.fire();
-            if(abs(gp.axes[3] > .1))this.fire();
+            if( (abs(gp.axes[2]) ) > .1){ this.fire(); }
+            if( (abs(gp.axes[3]) ) > .1){ this.fire(); }
+            if(mouse.pressed==1){ this.mouseFire();}
             
           }
 
@@ -118,20 +145,10 @@ player = {
             
         }
 
-        this.fire = function(){
-            if(t%7<1){
-                let xspeed = gp.axes[2] * 6, yspeed = gp.axes[3] * 6
-                bullets.push(new Bullet(this.x+3,this.y+5, 9, xspeed, yspeed))
-            }
-        }
+        
         
         
     },
 
-    // updatePosition: function() {
-    //   this.tx = this.x / tileWidth | 0;
-    //   this.ty = this.y / tileHeight | 0;
-    //   this.gid = COLLISION + this.tx + this.ty * WIDTH;
-    // }
 
   }

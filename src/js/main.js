@@ -11,17 +11,21 @@ bullets = [];
 particles = [];
 states = {};
 gp = false;
+mouse = {x:0, y:0, pressed:false}
 
 lcg = new LCG(1019);
+tileng = new LCG(42);
 
 init = () => {
   stats = new Stats();
   stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
   document.body.appendChild( stats.dom );
+  canvas.addEventListener("mousemove", getMousePos);
+  canvas.addEventListener("mousedown", getMousePos);
   
 
   drawMap();
-  //createSwitches();
+  createSwitches();
   spawnEnemies();
 
   state = "menu";
@@ -40,23 +44,64 @@ init = () => {
   viewY = player.y-HEIGHT/2;
   
   sounds = {};
+  sndData = [
+    {name:'song', data: song},
+    {name:'sndGun', data: sndGun},
+    {name:'sndSplode1', data: sndSplode1}
+    ]
   //music stuff-----------------------------------------------------
-  music = new CPlayer();
-  music.init(song);
-  done = false;
-  setInterval(function () {
-    if (done) {
-      return;
-    }
-    done = music.generate() == 1;
-    if(done){
-      wave = music.createWave().buffer;
-      audioCtx.decodeAudioData(wave, function(buffer) {
-        sounds.song = buffer;
-        playSound(sounds.song, 1, 0, 0.5, true);
-      })
-    }
-  },0)
+  sndData.forEach(function(o){
+      var sndGenerator = new CPlayer();
+      sndGenerator.init(o.data);
+      var done = false;
+      setInterval(function () {
+        if (done) {
+          return;
+        }
+        done = sndGenerator.generate() == 1;
+        if(done){
+          let wave = sndGenerator.createWave().buffer;
+          audioCtx.decodeAudioData(wave, function(buffer) {
+            sounds[o.name] = buffer;
+            //playSound(sounds.song, 1, 0, 0.5, true);
+          })
+        }
+      },0)
+  })
+  // genSong = new CPlayer();
+  // genSong.init(song);
+  // done = false;
+  // setInterval(function () {
+  //   if (done) {
+  //     return;
+  //   }
+  //   done = genSong.generate() == 1;
+  //   if(done){
+  //     let wave = genSong.createWave().buffer;
+  //     audioCtx.decodeAudioData(wave, function(buffer) {
+  //       sounds.song = buffer;
+  //       playSound(sounds.song, 1, 0, 0.5, true);
+  //     })
+  //   }
+  // },0)
+  // genGun = new CPlayer();playSound(sounds.gun, 1, 0, 0.5, true);
+  // genGun.init(sndGun);
+  // done2 = false;
+  // setInterval(function () {
+  //   if (done2) {
+  //     return;
+  //   }
+  //   done2 = genGun.generate() == 1;
+  //   if(done2){
+  //     let wave = genGun.createWave().buffer;
+  //     audioCtx.decodeAudioData(wave, function(buffer) {
+  //       sounds.gun = buffer;
+  //       //playSound(sounds.gun, 1, 0, 0.5, true);
+  //     })
+  //   }
+  // },0)
+
+
     paused = false;
   
    loop();
@@ -84,10 +129,12 @@ window.addEventListener("gamepadconnected", function(e) {
 
 
 
+
 loop = e => {
   stats.begin();
   var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
 gp = gamepads[0];
+//mouse = getMousePos(e);
 
   if(paused){
     setColors(22,22);
@@ -150,7 +197,7 @@ drawMap = e => {
 
 createSwitches = e => {
 
-   for(let i = 0; i < 10; i++){
+   for(let i = 0; i < 100; i++){
    var x = lcg.nextIntRange(6, 20);
    var y = lcg.nextIntRange(13, 16);
    var colors = [7,7,28,18];
@@ -233,7 +280,7 @@ spawnEnemies = e => {
     let x = lcg.nextIntRange(0,WIDTH);
     let y = lcg.nextIntRange(0,HEIGHT);
     if(getGID(x*tileWidth,y*tileHeight) == 0){
-      enemies.push(new Enemy(x*tileWidth,y*tileHeight,10));
+      enemies.push(new Enemy(x*tileWidth,y*tileHeight,10,lcg.nextIntRange(6,30),lcg.nextIntRange(0,3)));
     }
     
   }
@@ -260,6 +307,19 @@ buttonPressed=(b)=>{
     return b.pressed;
   }
   return b == 1.0;
+}
+
+getMousePos = (evt) =>  {
+  var rect = c.getBoundingClientRect(), // abs. size of element
+      scaleX = c.width / rect.width,    // relationship bitmap vs. element for X
+      scaleY = c.height / rect.height;  // relationship bitmap vs. element for Y
+  //console.log(evt.clientX, evt.clientY, evt.buttons);
+  
+  mouse = {
+    x: ( (evt.clientX - rect.left) * scaleX)|0,   // scale mouse coordinates after they have
+    y: ( (evt.clientY - rect.top) * scaleY)|0,     // been adjusted to be relative to element
+    pressed: evt.buttons
+  }
 }
 
 // objects.push({

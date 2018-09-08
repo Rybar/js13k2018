@@ -1,10 +1,12 @@
-function Enemy(x,y,health) {
+function Enemy(x,y, health, size=8, color=0) {
+    this.colors=[18,5,27,19];
+    this.color = colors[color];
     this.x = x;
     this.y = y;
     this.oldX = 0;
     this.oldY = 0;
-    this.width = 16;
-    this.height = 16;
+    this.width = size;
+    this.height = size;
     this.startHealth = health;
     this.health = health;
     this.hit = false;
@@ -22,15 +24,15 @@ function Enemy(x,y,health) {
             // circle(sx,sy,8,17,17);
             // circle(sx,sy,2,0,0);
             fillRect(sx,sy-ymod,sx+this.width,sy+this.height,0,0);
-            rect(sx,sy-ymod,sx+this.width,sy+this.height,17,17);
-            fillRect(sx+3,sy+3,sx+6,sy+4,22,22);
+            rect(sx,sy-ymod,sx+this.width,sy+this.height,this.color,this.color);
+            //fillRect(sx+3,sy+3,sx+6,sy+4,22,22);
             if(this.following){
-                fillRect(sx+4,sy+7,sx+11,sy+11,22,22);
-                setColors(17,17);
-                pset(sx+6,sy+7);pset(sx+12,sy+7);
+                //fillRect(sx+4,sy+7,sx+11,sy+11,22,22);
+                //setColors(17,17);
+                //pset(sx+6,sy+7);pset(sx+12,sy+7);
             }
             if(this.biting){
-                rect(sx,sy-ymod,sx+this.width,sy+this.height,5,5);
+                //rect(sx,sy-ymod,sx+this.width,sy+this.height,5,5);
             }
             if(this.health < this.startHealth ){
                 //draw a health bar, but only after initial damage
@@ -56,8 +58,8 @@ function Enemy(x,y,health) {
                 angle = atan2(ydelta, xdelta);
             if(distance < 100){
                 this.following = true;
-                this.x += cos(angle)*random()*.5;
-                this.y += sin(angle)*random()*.5;
+                this.x += cos(angle)*random();
+                this.y += sin(angle)*random();
             }
             if(rectCollision(this, player)){
                 player.hit = true;
@@ -80,6 +82,9 @@ function Enemy(x,y,health) {
 
     this.kill = function(){
         //splode play
+        let sx = this.x - viewX, sy = this.y - viewY;
+        playSound(sounds.sndSplode1, 1, 0, 0.7, false);
+        fillCircle(sx+this.width/2, sy+this.width/2, this.width*2, 22, 22);
         enemies.splice( enemies.indexOf(this), 1 );
     }
 }  //end enemy
