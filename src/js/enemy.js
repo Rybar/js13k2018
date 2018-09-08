@@ -58,8 +58,8 @@ function Enemy(x,y, health, size=8, color=0) {
                 angle = atan2(ydelta, xdelta);
             if(distance < 100){
                 this.following = true;
-                this.x += cos(angle)*random();
-                this.y += sin(angle)*random();
+                this.x += cos(angle)*10/this.width;
+                this.y += sin(angle)*10/this.width;;
             }
             if(rectCollision(this, player)){
                 player.hit = true;
@@ -82,9 +82,13 @@ function Enemy(x,y, health, size=8, color=0) {
 
     this.kill = function(){
         //splode play
-        let sx = this.x - viewX, sy = this.y - viewY;
-        playSound(sounds.sndSplode1, 1, 0, 0.7, false);
+        let sx = this.x - viewX, sy = this.y - viewY,
+        sndMod = this.width.map(0,32,1.5,0);
+        playSound(sounds.sndSplode1, 1+sndMod, 0, 0.7, false);
         fillCircle(sx+this.width/2, sy+this.width/2, this.width*2, 22, 22);
+        for(let i = 0; i < 40; i++){
+            particles.push(new Particle(this.x,this.y, 22, random()*3-1.5, random()*3-1.5));
+          }
         enemies.splice( enemies.indexOf(this), 1 );
     }
 }  //end enemy

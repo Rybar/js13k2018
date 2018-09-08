@@ -1,11 +1,11 @@
-function Bullet(x,y,color,xspeed,yspeed){
+function Bullet(x,y,color,xspeed,yspeed, life=90){
     this.x = x;
     this.y = y;
     this.width = 4;
     this.height = 4;
     this.xspeed = xspeed;
     this.yspeed = yspeed;
-    this.life = 90;
+    this.life = life;
 
     this.draw = function(){
         this.oldX = this.x;
@@ -36,21 +36,23 @@ function Bullet(x,y,color,xspeed,yspeed){
 
     this.kill = function(){
         //splode play
-        for(let i = 0; i < 40; i++){
-            particles.push(new Particle(this.x,this.y, 22, random()*3-1.5, random()*3-1.5));
+        let sx = this.x - viewX, sy = this.y-viewY;
+        fillCircle(sx+this.width/2, sy+this.width/2, this.width*2, 22, 22);
+        for(let i = 0; i < 20; i++){
+            particles.push(new Particle(this.x,this.y, 22, random()-.5, random()*.5,20));
           }
         bullets.splice( bullets.indexOf(this), 1 );
     }
 }
 
-function Particle(x,y,color,xspeed,yspeed){
+function Particle(x,y,color,xspeed,yspeed, life = 40){
     this.x = x;
     this.y = y;
     this.width = 1;
     this.height = 1;
     this.xspeed = xspeed;
     this.yspeed = yspeed;
-    this.life = 40;
+    this.life = life;
 
     this.draw = function(){
         this.oldX = this.x;

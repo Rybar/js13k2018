@@ -3,7 +3,8 @@ states.menu = {
     step: function(dt){
         if(Key.justReleased(Key.SPACE)){
            // console.log('space pressed');
-            state = "game";
+           playSound(sounds.titleSong, 1, 0, 0.5, true);
+           state = "game";
         }
 
     },
@@ -12,7 +13,7 @@ states.menu = {
         renderTarget = SCREEN;
         clear(0);
         renderSource = COLLISION;
-        mapPal = [2,7];
+        mapPal = [1,31];
         spr(0,0,WIDTH,HEIGHT,0,0,0,0,mapPal);
 
         // fillRect(0,0,20,20,4);

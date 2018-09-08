@@ -44,35 +44,44 @@
         for(let i = rx0; i <rx1; i++){
             for(let j = ry0; j < ry1; j++){
                 let tile = ram[COLLISION+j * mapWidth + i];
-                tileng.seed = rx0+j * mapWidth + ry1+i;
-
-                //console.log(cell)
                 let x, y;
+                
                 switch(tile){
                 case 1:
+                        setColors(61,62);
                         x = i * tileWidth - viewX,
                         y = j * tileHeight - viewY;
-                        pat = dither[tileng.nextIntRange(0,15)];
-                        fillRect(x,y, x+tileWidth, y+tileHeight, 8,7);
+                        let cw = tileWidth/2;
+                        pat = dither[ram[BACKGROUND+j*mapWidth+i]];
+                        fillRect(x,y, x+cw, y+cw);
+
+                        pat = dither[ram[BACKGROUND+j*mapWidth+i-1]];
+                        fillRect(x+cw,y, x+tileWidth, y+cw);
+
+                        pat = dither[ram[BACKGROUND+j*mapWidth+i-2]];
+                        fillRect(x+cw,y+cw, x+tileWidth, y+tileHeight);
+
+                        pat = dither[ram[BACKGROUND+j*mapWidth+i-3]];
+                        fillRect(x,y+cw, x+tileWidth, y+tileHeight);
                         //rect(x,y,x+tileWidth+1, y+tileHeight+1, 6,7); 
                 break;
 
                 case 2: //switches
-               // drawSwitch({x: i, y: j});
+                //drawSwitch({x: i, y: j});
                 break;
 
                 default:
                     x = i * tileWidth - viewX,
                     y = j * tileHeight - viewY;
                     //tileng.seed = i*j;
-                    pat = dither[tileng.nextIntRange(0,15)];
-                    fillRect(x,y, x+tileWidth, y+tileHeight, 2,1);
+                    pat = dither[ram[BACKGROUND+j*mapWidth+i]];
+                    fillRect(x,y, x+tileWidth, y+tileHeight, 16,32);
                     //rect(x,y,x+tileWidth, y+tileHeight, 2,3);
                 }
             }
         } //end map draw loop
         //drawObjects();
-        //drawSwitches();
+        drawSwitches();
         enemies.forEach(function(o){o.draw()});
         bullets.forEach(function(o){o.draw()});
         particles.forEach(function(o){o.draw()});
@@ -82,13 +91,14 @@
         player.draw();
         
         //minimap---------------------------------------
-        fillRect(WIDTH-60,HEIGHT-60,WIDTH-5,HEIGHT-5,0,0);
-        rect(WIDTH-60,HEIGHT-60,WIDTH-5,HEIGHT-5,22,22);
-        renderSource = COLLISION;
-        mapPal = [1,7];
-        spr(rx0-18,ry0-18,54,54,WIDTH-59,HEIGHT-59,0,0,mapPal);
-        setColors(22,22);
-        pset((player.x-viewX)/tileWidth+WIDTH-56+18, (player.y-viewY)/tileHeight+HEIGHT-56+18)
+        // fillRect(WIDTH-60,HEIGHT-60,WIDTH-5,HEIGHT-5,0,0);
+        // rect(WIDTH-60,HEIGHT-60,WIDTH-5,HEIGHT-5,22,22);
+        // renderSource = COLLISION;
+        // mapPal = [1,7];
+        // spr(rx0-18,ry0-18,54,54,WIDTH-59,HEIGHT-59,0,0,mapPal);
+        // setColors(22,22);
+        // pset((player.x-viewX)/tileWidth+WIDTH-56+18, (player.y-viewY)/tileHeight+HEIGHT-56+18)
+        //enemies.forEach()
 
         //healthbar---------------------
         setColors(22,22);
@@ -101,6 +111,7 @@
                 player.hit?2:0,
                 4
               ]);
+        pat = dither[8];
         fillRect(42,5,42+player.health/2,10, 64,11);
         //mousecursor-----------
         circle(mouse.x, mouse.y, 3, 22);      

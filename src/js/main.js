@@ -1,20 +1,24 @@
 //-----main.js---------------
-const tileWidth = 32;
-const tileHeight = 32;
+const tileWidth = 24;
+const tileHeight = 24;
 const mapWidth = 320;
 const mapHeight = 200;
+
+score=0;
 
 switches = [];
 enemies = []; 
 objects = [];
 bullets = [];
 particles = [];
+batteries = [];
 states = {};
 gp = false;
 mouse = {x:0, y:0, pressed:false}
 
 lcg = new LCG(1019);
 tileng = new LCG(42);
+
 
 init = () => {
   stats = new Stats();
@@ -47,7 +51,8 @@ init = () => {
   sndData = [
     {name:'song', data: song},
     {name:'sndGun', data: sndGun},
-    {name:'sndSplode1', data: sndSplode1}
+    {name:'sndSplode1', data: sndSplode1},
+    {name:'titleSong', data: titleSong}
     ]
   //music stuff-----------------------------------------------------
   sndData.forEach(function(o){
@@ -68,42 +73,8 @@ init = () => {
         }
       },0)
   })
-  // genSong = new CPlayer();
-  // genSong.init(song);
-  // done = false;
-  // setInterval(function () {
-  //   if (done) {
-  //     return;
-  //   }
-  //   done = genSong.generate() == 1;
-  //   if(done){
-  //     let wave = genSong.createWave().buffer;
-  //     audioCtx.decodeAudioData(wave, function(buffer) {
-  //       sounds.song = buffer;
-  //       playSound(sounds.song, 1, 0, 0.5, true);
-  //     })
-  //   }
-  // },0)
-  // genGun = new CPlayer();playSound(sounds.gun, 1, 0, 0.5, true);
-  // genGun.init(sndGun);
-  // done2 = false;
-  // setInterval(function () {
-  //   if (done2) {
-  //     return;
-  //   }
-  //   done2 = genGun.generate() == 1;
-  //   if(done2){
-  //     let wave = genGun.createWave().buffer;
-  //     audioCtx.decodeAudioData(wave, function(buffer) {
-  //       sounds.gun = buffer;
-  //       //playSound(sounds.gun, 1, 0, 0.5, true);
-  //     })
-  //   }
-  // },0)
-
-
+ 
     paused = false;
-  
    loop();
 
 }
@@ -188,29 +159,36 @@ drawMap = e => {
         
     fillRect(x, y, x+WIDTH-30, y+1,0,0);
   }
+  fillRect(this.mapWidth/2-2, this.mapHeight/2-2,this.mapWidth/2+2,this.mapWidth/2+2,0,0);
   fillRect(0,0,WIDTH,5,1,1);
   fillRect(0,0,5,HEIGHT,1,1);
   fillRect(WIDTH-5,0,WIDTH,HEIGHT,1,1);
   fillRect(0,HEIGHT-5,WIDTH,HEIGHT,1);
+
+  for(var i = BACKGROUND; i <= BACKGROUND+PAGESIZE; i++){
+    ram[i] = tileng.nextIntRange(0,15);
+  }
   renderTarget = SCREEN;
 }
 
 createSwitches = e => {
 
-   for(let i = 0; i < 100; i++){
-   var x = lcg.nextIntRange(6, 20);
-   var y = lcg.nextIntRange(13, 16);
+   for(let i = 0; i < 1000; i++){
+   var x = lcg.nextIntRange(5, 320);
+   var y = lcg.nextIntRange(5, 200);
    var colors = [7,7,28,18];
-   renderTarget = COLLISION;
-   setColors(2,2);
-   pset(x,y);
-   renderTarget = SCREEN;
-   switches.push( {
-     x: x, y: y,
-     index: getIndex(x*tileWidth,y*tileHeight),
-     color: colors[lcg.nextIntRange(0,3)],
-     state: 0 //lcg.nextIntRange(0,2)
-   })
+   if(!pget(x,y,COLLISION)){
+    renderTarget = COLLISION;
+    setColors(2,2);
+    pset(x,y);
+    renderTarget = SCREEN;
+    switches.push( {
+      x: x, y: y,
+      index: getIndex(x*tileWidth,y*tileHeight),
+      color: colors[lcg.nextIntRange(0,3)],
+      state: 0 //lcg.nextIntRange(0,2)
+    })
+   }
   }
 }
 
@@ -225,6 +203,7 @@ drawSwitches = e => {
         case 2: //overloaded/broken
         break;
         case 1: //on
+          pat = dither[8];
           y = s.y * tileHeight - viewY;
           x = s.x * tileWidth - viewX;
           fillRect(x+2,y+2, x+tileWidth-2, y+tileHeight-2, s.color, 0);
@@ -234,7 +213,7 @@ drawSwitches = e => {
           //
           y = s.y * tileHeight - viewY;
           x = s.x * tileWidth - viewX;
-          fillRect(x+2,y+2, x+tileWidth-2, y+tileHeight-2, 0, 2);    
+          fillRect(x+2,y+2, x+tileWidth-2, y+tileHeight-2, 0, 1);    
       }
     }
       
@@ -280,7 +259,7 @@ spawnEnemies = e => {
     let x = lcg.nextIntRange(0,WIDTH);
     let y = lcg.nextIntRange(0,HEIGHT);
     if(getGID(x*tileWidth,y*tileHeight) == 0){
-      enemies.push(new Enemy(x*tileWidth,y*tileHeight,10,lcg.nextIntRange(6,30),lcg.nextIntRange(0,3)));
+      enemies.push(new Enemy(x*tileWidth,y*tileHeight,10,lcg.nextIntRange(6,23),lcg.nextIntRange(0,3)));
     }
     
   }
@@ -357,6 +336,8 @@ getMousePos = (evt) =>  {
 
 // })
 
-
+isOnScreen = o => {
+  return inView(o.x - viewX, o.y-viewY);
+}
 
 //----- END main.js---------------
