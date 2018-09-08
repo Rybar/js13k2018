@@ -1,6 +1,7 @@
 states.menu = {
-
+    ready: false,
     step: function(dt){
+        this.ready = soundsReady == sndData.length;
         if(Key.justReleased(Key.SPACE)){
            // console.log('space pressed');
            playSound(sounds.titleSong, 1, 0, 0.5, true);
@@ -25,14 +26,14 @@ states.menu = {
         //     21,
         //     0
         //   ]);
-        //   text([
-        //     'PRESS SPACE TO PLAY', WIDTH/2, 190, 3, 9,
-        //     'center',
-        //     'top',
-        //     2,
-        //     21,
-        //     0
-        //   ]);
+          text([
+            this.ready?"PRESS SPACE TO PLAY":"ASSETS OFFLINE. PLEASE WAIT..", WIDTH/2, 190, 1, 9,
+            'center',
+            'top',
+            1,
+            22,
+            0
+          ]);
     }
 
 

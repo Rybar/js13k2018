@@ -2,7 +2,7 @@
 
     step: function(dt){
         player.update(dt);
-       // updateObjects();
+        updateObjects();
 
         //follow player
         if(player.x - viewX + deadzoneX > viewW){
@@ -21,6 +21,7 @@
         enemies.forEach(function(o){o.update();});
         bullets.forEach(function(o){o.update();});
         particles.forEach(function(o){o.update();});
+        batteries.forEach(battery =>{ battery.update()})
 
         updateCollisions();
 
@@ -31,7 +32,6 @@
     draw: function(dt){
 
         pat = dither[8];
-        renderTarget = EFFECTS; clear(0);
         fillRect(0,0,WIDTH,HEIGHT, 2);
         renderTarget = SCREEN; clear(0);
         let tilepad = 3,
@@ -63,7 +63,14 @@
 
                         pat = dither[ram[BACKGROUND+j*mapWidth+i-3]];
                         fillRect(x,y+cw, x+tileWidth, y+tileHeight);
-                        //rect(x,y,x+tileWidth+1, y+tileHeight+1, 6,7); 
+
+                        if(getGID(i*tileWidth,(j+1)*tileHeight)==0){
+                            setColors(63,64);
+                            fillRect(x,y+cw,x+tileWidth,y+tileWidth);
+                            line(x,y+cw,x+tileWidth,y+cw,60,60);
+                            line(x,y+tileHeight-1,x+tileHeight, y+tileHeight-1, 1,1);
+                        }
+                        //rect(x,y,x+tileWidth+1, y+tileHeight+1, 6,7);
                 break;
 
                 case 2: //switches
@@ -85,6 +92,7 @@
         enemies.forEach(function(o){o.draw()});
         bullets.forEach(function(o){o.draw()});
         particles.forEach(function(o){o.draw()});
+        batteries.forEach(function(o){o.draw()});
 
         
 
@@ -113,6 +121,28 @@
               ]);
         pat = dither[8];
         fillRect(42,5,42+player.health/2,10, 64,11);
+        //score---------------------------
+        setColors(22,22);
+        text([
+            'SCORE ' + score.pad(12), WIDTH-5, 5, 1, 1,
+            'right',
+            'top',
+            1,
+            22,
+            player.score?2:0,
+            4
+          ]);
+
+          text([
+            'CELLS ' + player.batteries.pad(4), 160, 5, 1, 1,
+            'right',
+            'top',
+            1,
+            22,
+            player.score?2:0,
+            4
+          ]);
+
         //mousecursor-----------
         circle(mouse.x, mouse.y, 3, 22);      
     }

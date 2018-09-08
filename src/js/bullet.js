@@ -87,3 +87,32 @@ function Particle(x,y,color,xspeed,yspeed, life = 40){
         particles.splice( particles.indexOf(this), 1 );
     }
 }
+
+function Battery(x,y){
+    this.x = x;
+    this.y = y;
+    this.width = 4;
+    this.height = 4;
+
+    this.update = function(){
+        let sx = this.x-viewX, sy=this.y-viewY;
+        if(inView(sx,sy)){
+            if(rectCollision(this,player)){
+                this.kill();
+                player.batteries++;
+            }
+        }
+    }
+
+    this.draw = function(){
+        let sx = this.x-viewX, sy = this.y-viewY
+        if(inView(sx,sy)){
+            fillCircle(sx+2,sy+2,2,9);
+        }
+    }
+
+    this.kill = function(){
+        batteries.splice(batteries.indexOf(this),1);
+    }
+}
+

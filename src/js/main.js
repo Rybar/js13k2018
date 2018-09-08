@@ -48,6 +48,7 @@ init = () => {
   viewY = player.y-HEIGHT/2;
   
   sounds = {};
+  soundsReady = 0;
   sndData = [
     {name:'song', data: song},
     {name:'sndGun', data: sndGun},
@@ -68,6 +69,7 @@ init = () => {
           let wave = sndGenerator.createWave().buffer;
           audioCtx.decodeAudioData(wave, function(buffer) {
             sounds[o.name] = buffer;
+            soundsReady++;
             //playSound(sounds.song, 1, 0, 0.5, true);
           })
         }
@@ -172,6 +174,18 @@ drawMap = e => {
 }
 
 createSwitches = e => {
+  // var x = player.x/tileWidth|0, y = player.y/tileHeight|0;
+  // renderTarget = COLLISION;
+  //   setColors(2,2);
+  //   pset(x,y);
+  // renderTarget = SCREEN;
+
+  // switches.push( {
+  //       x: x, y: y,
+  //       index: COLLISION + y*mapWidth + x,
+  //       color: 7,
+  //       state: 0 //lcg.nextIntRange(0,2)
+  //     })
 
    for(let i = 0; i < 1000; i++){
    var x = lcg.nextIntRange(5, 320);
@@ -184,7 +198,7 @@ createSwitches = e => {
     renderTarget = SCREEN;
     switches.push( {
       x: x, y: y,
-      index: getIndex(x*tileWidth,y*tileHeight),
+      index: COLLISION + y*mapWidth + x,
       color: colors[lcg.nextIntRange(0,3)],
       state: 0 //lcg.nextIntRange(0,2)
     })
@@ -200,20 +214,17 @@ drawSwitches = e => {
     if(inView(x, y, tileWidth)){
       renderTarget = SCREEN;
       switch(s.state){
-        case 2: //overloaded/broken
-        break;
         case 1: //on
           pat = dither[8];
           y = s.y * tileHeight - viewY;
           x = s.x * tileWidth - viewX;
-          fillRect(x+2,y+2, x+tileWidth-2, y+tileHeight-2, s.color, 0);
+          fillRect(x+4,y+4, x+tileWidth-4, y+tileHeight-4, s.color, 22);
         break;
         default: //off
-          
-          //
+          pat = dither[8];
           y = s.y * tileHeight - viewY;
           x = s.x * tileWidth - viewX;
-          fillRect(x+2,y+2, x+tileWidth-2, y+tileHeight-2, 0, 1);    
+          fillRect(x+4,y+4, x+tileWidth-4, y+tileHeight-4, s.color, 0);    
       }
     }
       
@@ -338,6 +349,12 @@ getMousePos = (evt) =>  {
 
 isOnScreen = o => {
   return inView(o.x - viewX, o.y-viewY);
+}
+
+getNeighbors = (tx,ty) => {
+  return {
+    N: getGID(tx,ty-1)
+  }
 }
 
 //----- END main.js---------------

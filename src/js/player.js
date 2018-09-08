@@ -13,16 +13,17 @@ player = {
     tx: 0,
     ty: 0,
     steps: 0,
-    gid: 0,
+    index: 0,
     hit: false,
     xm: 0,
     ym: 0,
+    batteries: 0,
 
     draw: function(dt) {
         let sx = this.x-viewX;
         let sy = this.y-viewY;
         //let vlegmod = this.y%28 > 14 || this.x%28 >14 ? 0 : 1;
-        //let hlegmod = this.x%20 > 10 ? 0 : 1;
+        //let hlegmod = this.x%20 > 10 ? 0 : 1; 
         let vlegmod = this.steps%28 > 14 ? 0:1;
         let vheadmod = this.steps%40 > 20 ? 0: 1;
         
@@ -122,15 +123,22 @@ player = {
             this.y = this.oldY;
         }
 
-        if(Key.justReleased(Key.x)){
+        if(Key.justReleased(Key.SPACE)){
                 let onSwitch = (getGID(this.x, this.y) == 2 ||
                 getGID(this.x+this.width-1, this.y) ==2 ||
                 getGID(this.x+this.width-1, this.y+this.height-1) ==2 ||
                 getGID(this.x, this.y+this.height-1) == 2 
                 )
                 if(onSwitch){
-                    foundSwitch = switches.find(function(e){return e.index == getIndex(this.x, this.y)});
+                    //console.log('on a switch space');
+                    //console.log(getIndex(this.x, this.y));
+                    foundSwitch = switches.find(function(e){
+                        //console.log(e.index);
+                        //console.log(this, getIndex(this.x, this.y));
+                        return e.index == getIndex(player.x, player.y)});
+                    console.log(foundSwitch);
                     if(foundSwitch){
+                        console.log('switch activated');
                         foundSwitch.state = 1;
                     }
                 }
