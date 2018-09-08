@@ -90,8 +90,9 @@ function Enemy(x,y, health, size=8, color=0) {
         for(let i = 0; i < 40; i++){
             particles.push(new Particle(this.x,this.y, 22, random()*3-1.5, random()*3-1.5));
           }
-        console.log('dropping battery');
-        batteries.push(new Battery(this.x+this.width/2, this.y+this.width+2));
+        if(random()>.5){
+            batteries.push(new Battery(this.x+this.width/2, this.y+this.width+2));
+        }
         score += 100*this.width;
         enemies.splice( enemies.indexOf(this), 1 );
 

@@ -123,26 +123,32 @@ player = {
             this.y = this.oldY;
         }
 
-        if(Key.justReleased(Key.SPACE)){
-                let onSwitch = (getGID(this.x, this.y) == 2 ||
-                getGID(this.x+this.width-1, this.y) ==2 ||
-                getGID(this.x+this.width-1, this.y+this.height-1) ==2 ||
-                getGID(this.x, this.y+this.height-1) == 2 
-                )
-                if(onSwitch){
-                    //console.log('on a switch space');
-                    //console.log(getIndex(this.x, this.y));
-                    foundSwitch = switches.find(function(e){
-                        //console.log(e.index);
-                        //console.log(this, getIndex(this.x, this.y));
-                        return e.index == getIndex(player.x, player.y)});
-                    console.log(foundSwitch);
-                    if(foundSwitch){
-                        console.log('switch activated');
-                        foundSwitch.state = 1;
+        
+        let onSwitch = (getGID(this.x, this.y) == 2 ||
+        getGID(this.x+this.width-1, this.y) ==2 ||
+        getGID(this.x+this.width-1, this.y+this.height-1) ==2 ||
+        getGID(this.x, this.y+this.height-1) == 2 
+        )
+        if(onSwitch){
+            foundSwitch = switches.find(function(e){
+                return e.index == getIndex(player.x, player.y)});
+            if(foundSwitch && foundSwitch.state < 4){
+                if(foundSwitch.state <= 3){
+                    if(player.batteries > 0){
+                        if(foundSwitch.state == 3){
+                            playSound(sounds.cellComplete,1,0,0.7,0);
+                        }
+                        playSound(sounds.powerLevel,1,0,0.7,0);
+                        foundSwitch.state++;
+                        player.batteries--
                     }
+                    
                 }
+                
+                
+            }
         }
+        
         if(Key.isDown(Key.c)){
             //console.log('bullet spawned');
             if(t%10<1){

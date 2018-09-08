@@ -53,7 +53,10 @@ init = () => {
     {name:'song', data: song},
     {name:'sndGun', data: sndGun},
     {name:'sndSplode1', data: sndSplode1},
-    {name:'titleSong', data: titleSong}
+    {name:'titleSong', data: titleSong},
+    {name:'batteryPickup', data: batteryPickup},
+    {name:'cellComplete', data: cellComplete},
+    {name:'powerLevel',data:powerLevel}
     ]
   //music stuff-----------------------------------------------------
   sndData.forEach(function(o){
@@ -211,14 +214,37 @@ drawSwitches = e => {
     //ram[s.index] = 2;
     var y = s.y * tileHeight - viewY;
     var x = s.x * tileWidth - viewX;
+    var cw = 8;
     if(inView(x, y, tileWidth)){
       renderTarget = SCREEN;
       switch(s.state){
+        case 4: //on
+          pat = dither[8];
+          y = s.y * tileHeight - viewY;
+          x = s.x * tileWidth - viewX;
+          fillRect(x+4,y+4, x+tileWidth-4, y+tileHeight-4, s.color, 22);
+        break;
+        case 3: //on
+          pat = dither[8];
+          y = s.y * tileHeight - viewY;
+          x = s.x * tileWidth - viewX;
+          fillRect(x+4,y+4, x+tileWidth-4, y+tileHeight-4, s.color, 22);
+          fillRect(x+4,y+16, x+tileWidth-4, y+tileHeight-4, s.color, 0);
+          
+        break;
+        case 2: //on
+          pat = dither[8];
+          y = s.y * tileHeight - viewY;
+          x = s.x * tileWidth - viewX;
+          fillRect(x+4,y+4, x+tileWidth-4, y+tileHeight-4, s.color, 22);
+          fillRect(x+4,y+12, x+tileWidth-4, y+tileHeight-4, s.color, 0);
+        break;
         case 1: //on
           pat = dither[8];
           y = s.y * tileHeight - viewY;
           x = s.x * tileWidth - viewX;
           fillRect(x+4,y+4, x+tileWidth-4, y+tileHeight-4, s.color, 22);
+          fillRect(x+4,y+8, x+tileWidth-4, y+tileHeight-4, s.color, 0);
         break;
         default: //off
           pat = dither[8];

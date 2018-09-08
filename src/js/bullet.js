@@ -101,6 +101,7 @@ function Battery(x,y){
                 this.kill();
                 player.batteries++;
             }
+            particles.push(new Particle(sx+random()*4,sy*random()*4,11,random*.1,-1,40))
         }
     }
 
@@ -112,6 +113,7 @@ function Battery(x,y){
     }
 
     this.kill = function(){
+        playSound(sounds.batteryPickup,1,0,.6,0);
         batteries.splice(batteries.indexOf(this),1);
     }
 }

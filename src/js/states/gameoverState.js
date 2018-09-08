@@ -3,6 +3,9 @@ states.gameover = {
     step: function(dt){
         if(Key.justReleased(Key.SPACE)){
            // console.log('space pressed');
+            player.health = 100;
+            player.x = 180*tileWidth;
+            player.y = 100*tileWidth;
             state = "game";
         }
 
