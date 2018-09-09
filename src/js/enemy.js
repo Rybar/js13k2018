@@ -1,5 +1,5 @@
 function Enemy(x,y, health, size=8, color=0) {
-    this.colors=[18,5,27,19];
+    this.colors=[18,12,27,19];
     this.color = colors[color];
     this.x = x;
     this.y = y;
@@ -23,14 +23,15 @@ function Enemy(x,y, health, size=8, color=0) {
             // fillCircle(sx+8,sy,8,22,22);
             // circle(sx,sy,8,17,17);
             // circle(sx,sy,2,0,0);
-            fillRect(sx,sy-ymod,sx+this.width,sy+this.height,0,0);
-            rect(sx,sy-ymod,sx+this.width,sy+this.height,this.color,this.color);
-            //fillRect(sx+3,sy+3,sx+6,sy+4,22,22);
-            if(this.following){
-                //fillRect(sx+4,sy+7,sx+11,sy+11,22,22);
-                //setColors(17,17);
-                //pset(sx+6,sy+7);pset(sx+12,sy+7);
-            }
+            fillRect(sx,sy-ymod,sx+this.width,sy+this.height,0,64);
+            rect(sx,sy-ymod,sx+this.width,sy+this.height,this.color,this.color-1);
+            //eyes
+            let inc = this.width/5|0;
+            setColors(22,22);
+            fillRect(sx+inc,sy+inc,sx+inc+inc,sy+inc+inc,22,22);
+            fillRect(sx+inc*3,sy+inc,sx+inc*4,sy+inc*2,22,22);
+            
+            
             if(this.biting){
                 //rect(sx,sy-ymod,sx+this.width,sy+this.height,5,5);
             }

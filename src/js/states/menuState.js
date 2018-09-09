@@ -36,6 +36,14 @@ states.menu = {
         let inc = WIDTH/sndData.length;
         fillRect(0,0,soundsReady*inc,10,21,21);
         setColors(22,22);
+        text([
+            gp?"GAMEPAD DETECTED":"GAMEPADS SUPPORTED-PRESS A BUTTON", WIDTH/2, 170, 1, 9,
+            'center',
+            'top',
+            1,
+            22,
+            0
+          ]);
           text([
             "WASD/ZQSD TO MOVE   MOUSE TO AIM/SHOOT", WIDTH/2, 180, 1, 9,
             'center',

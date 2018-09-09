@@ -98,13 +98,13 @@ player = {
     
         if(gp){  //gamepad
 
-            if(buttonPressed(gp.buttons[3]) ) this.x+=this.vx;
-            else if(buttonPressed(gp.buttons[2]) ) this.x-=this.vx;
-            if(buttonPressed(gp.buttons[0]) ) this.y-=this.vy;
-            else if(buttonPressed(gp.buttons[1]) ) this.y+=this.vy;
+            // if(buttonPressed(gp.buttons[3]) ) this.x+=this.vx;
+            // else if(buttonPressed(gp.buttons[2]) ) this.x-=this.vx;
+            // if(buttonPressed(gp.buttons[0]) ) this.y-=this.vy;
+            // else if(buttonPressed(gp.buttons[1]) ) this.y+=this.vy;
       
-            if(abs(gp.axes[0]) > .1)this.x+= this.vx * gp.axes[0]; //allow for deadzone
-            if(abs(gp.axes[1]) > .1)this.y+= this.vy * gp.axes[1];
+            if( (abs(gp.axes[0]) ) > .1){this.x+= this.vx * gp.axes[0]; this.steps++; }//allow for deadzone
+            if( (abs(gp.axes[1]) ) > .1){ this.y+= this.vy * gp.axes[1]; this.steps++; }
 
             if( (abs(gp.axes[2]) ) > .1){ this.fire(); }
             if( (abs(gp.axes[3]) ) > .1){ this.fire(); }
@@ -139,10 +139,12 @@ player = {
                     if(player.batteries > 0){
                         if(foundSwitch.state == 3){
                             playSound(sounds.cellComplete,1,0,0.7,0);
+                            score += 20000
                         }
                         playSound(sounds.powerLevel,1,0,0.7,0);
                         foundSwitch.state++;
                         player.batteries--
+                        score += 2500
                     }
                     
                 }

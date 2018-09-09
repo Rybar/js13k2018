@@ -299,8 +299,9 @@ spawnEnemies = e => {
   for(let i = 0; i < 6000;i++){
     let x = lcg.nextIntRange(0,WIDTH);
     let y = lcg.nextIntRange(0,HEIGHT);
+    let size = lcg.nextIntRange(6,23);
     if(getGID(x*tileWidth,y*tileHeight) == 0){
-      enemies.push(new Enemy(x*tileWidth,y*tileHeight,10,lcg.nextIntRange(6,23),lcg.nextIntRange(0,3)));
+      enemies.push(new Enemy(x*tileWidth,y*tileHeight,size*2,size,lcg.nextIntRange(0,3)));
     }
     
   }
@@ -340,7 +341,7 @@ getMousePos = (evt) =>  {
     y: ( (evt.clientY - rect.top) * scaleY)|0,     // been adjusted to be relative to element
     pressed: evt.buttons
   }
-  console.log(mouse);
+  console.log(mouse);   
 }
 
 // objects.push({
