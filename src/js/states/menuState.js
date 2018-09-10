@@ -8,7 +8,7 @@ states.menu = {
             this.titleSong = playSound(sounds.titleSong, 1, 0, 0.4, true);
             this.musicPlaying = true;
         }
-        if(Key.justReleased(Key.SPACE)){
+        if(Key.justReleased(Key.SPACE) || Key.justReleased(Key.w) || mouse.pressed){
            // console.log('space pressed');
            //playSound(sounds.titleSong, 1, 0, 0.5, true);
            state = "game";
@@ -54,7 +54,7 @@ states.menu = {
           ]);
         setColors(22,22);
           text([
-            this.ready?"PRESS SPACE TO PLAY":"ASSETS OFFLINE. PLEASE WAIT..", WIDTH/2, 190, 1, 9,
+            this.ready?"PRESS OR CLICK TO PLAY":"ASSETS OFFLINE. LOADING...", WIDTH/2, 190, 1, 9,
             'center',
             'top',
             1,

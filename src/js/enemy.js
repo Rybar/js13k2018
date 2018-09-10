@@ -23,6 +23,7 @@ function Enemy(x,y, health, size=8, color=0) {
             // fillCircle(sx+8,sy,8,22,22);
             // circle(sx,sy,8,17,17);
             // circle(sx,sy,2,0,0);
+            pat=dither[8];
             fillRect(sx,sy-ymod,sx+this.width,sy+this.height,0,64);
             rect(sx,sy-ymod,sx+this.width,sy+this.height,this.color,this.color-1);
             //eyes
@@ -64,6 +65,7 @@ function Enemy(x,y, health, size=8, color=0) {
             }
             if(rectCollision(this, player)){
                 player.hit = true;
+                player.health-=.1;
                 this.biting = true;
             }
             if(this.hit){
@@ -92,7 +94,7 @@ function Enemy(x,y, health, size=8, color=0) {
             particles.push(new Particle(this.x,this.y, 22, random()*3-1.5, random()*3-1.5));
           }
         if(random()>.5){
-            batteries.push(new Battery(this.x+this.width/2, this.y+this.width+2));
+            batteries.push(new Battery(this.x+1, this.y+1));
         }
         score += 100*this.width;
         enemies.splice( enemies.indexOf(this), 1 );

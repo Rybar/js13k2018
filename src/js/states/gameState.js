@@ -30,6 +30,10 @@
     },
   
     draw: function(dt){
+        terrainColors = [
+            [60,62,63,64,16,32],
+            [25,26,27,28,29,30],
+        ]
 
         pat = dither[8];
         fillRect(0,0,WIDTH,HEIGHT, 2);
@@ -45,10 +49,10 @@
             for(let j = ry0; j < ry1; j++){
                 let tile = ram[COLLISION+j * mapWidth + i];
                 let x, y;
-                
+                let tc = terrainColors[pget(i,j,MIDGROUND)];
                 switch(tile){
                 case 1:
-                        setColors(61,62);
+                        setColors(tc[1],tc[2]);
                         x = i * tileWidth - viewX,
                         y = j * tileHeight - viewY;
                         let cw = tileWidth/2;
@@ -65,9 +69,9 @@
                         fillRect(x,y+cw, x+tileWidth, y+tileHeight);
 
                         if(getGID(i*tileWidth,(j+1)*tileHeight)==0){
-                            setColors(63,64);
+                            setColors(tc[2],tc[3]);
                             fillRect(x,y+cw,x+tileWidth,y+tileWidth);
-                            line(x,y+cw,x+tileWidth,y+cw,60,60);
+                            line(x,y+cw,x+tileWidth,y+cw,tc[0],tc[0]);
                             line(x,y+tileHeight-1,x+tileHeight, y+tileHeight-1, 1,1);
                         }
                         //rect(x,y,x+tileWidth+1, y+tileHeight+1, 6,7);
@@ -82,7 +86,7 @@
                     y = j * tileHeight - viewY;
                     //tileng.seed = i*j;
                     pat = dither[ram[BACKGROUND+j*mapWidth+i]];
-                    fillRect(x,y, x+tileWidth, y+tileHeight, 16,32);
+                    fillRect(x,y, x+tileWidth, y+tileHeight, tc[4],tc[5]);
                     //rect(x,y,x+tileWidth, y+tileHeight, 2,3);
                 }
             }

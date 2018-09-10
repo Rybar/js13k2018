@@ -1,5 +1,5 @@
 player = {
-    x:24*180,
+    x:24*160,
     y:24*100, 
     oldX: 0,
     oldY: 0,
@@ -17,7 +17,8 @@ player = {
     hit: false,
     xm: 0,
     ym: 0,
-    batteries: 0,
+    batteries: 20,
+    color: 22,
 
     draw: function(dt) {
         let sx = this.x-viewX;
@@ -26,9 +27,9 @@ player = {
         //let hlegmod = this.x%20 > 10 ? 0 : 1; 
         let vlegmod = this.steps%28 > 14 ? 0:1;
         let vheadmod = this.steps%40 > 20 ? 0: 1;
-        
+      setColors(this.color,this.color);  
       //rect(sx, sy, sx+this.width, sy+this.height, this.color, this.color-1);
-      fillRect(sx+1, sy+vheadmod, sx+5, sy+4+vheadmod, 22, 22); //head height
+      fillRect(sx+1, sy+vheadmod, sx+5, sy+4+vheadmod); //head height
       fillRect(sx, sy+1+vheadmod, sx+this.width, sy+3+vheadmod); //head width
       fillRect(sx+2,sy+2, sx+4, sy+8)
       pset(sx,sy+7) //left hand
@@ -63,6 +64,7 @@ player = {
     },
 
     update: function() {
+        this.color = 22;
         this.oldX = player.x;
         this.oldY = player.y;
         let sx = player.x - viewX;
@@ -74,6 +76,7 @@ player = {
            // console.log("i'm hit!")
             player.health-=.1;
             this.hit = false;
+            this.color = 6;
         }
 
         if(player.health < 0){
@@ -140,6 +143,9 @@ player = {
                         if(foundSwitch.state == 3){
                             playSound(sounds.cellComplete,1,0,0.7,0);
                             score += 20000
+                            renderTarget = MIDGROUND;
+                            fillCircle(player.x/tileWidth,player.y/tileWidth, 4, 1, 1);
+                            renderTarget = SCREEN;
                         }
                         playSound(sounds.powerLevel,1,0,0.7,0);
                         foundSwitch.state++;

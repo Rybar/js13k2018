@@ -203,7 +203,7 @@ audioCtx = new AudioContext;
     cursorColor2 = color2;
   }
 
-  function pset(x,y) { //an index from colors[], 0-64
+  function pset(x,y, color1=cursorColor, color2=cursorColor2) { //an index from colors[], 0-64
     //o[0] x
     //o[1] y
     x = x|0;

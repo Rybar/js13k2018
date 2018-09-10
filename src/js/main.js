@@ -5,7 +5,7 @@ const mapWidth = 320;
 const mapHeight = 200;
 
 score=0;
-
+rooms = [];
 switches = [];
 enemies = []; 
 objects = [];
@@ -104,12 +104,6 @@ init = () => {
 
 }
 
-//initialize  event listeners--------------------------
-
-
-
-
-
 loop = e => {
   stats.begin();
   var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
@@ -151,66 +145,115 @@ gp = gamepads[0];
 }
 
 drawMap = e => {
+  rooms.push({
+    x: 156,
+    y: 96,
+    width: 10,
+    height: 10,
+  })
   renderTarget = COLLISION;
-  setColors(1,1);
-  fillRect(0,0,WIDTH,HEIGHT, 1,1);
-  //fillRect(4,4, WIDTH-4, HEIGHT-4, 0,0);
-  for(let i = 0; i < 900; i++){
-    let x = lcg.nextIntRange(5, WIDTH-5),
-        y = lcg.nextIntRange(5, HEIGHT-5);
-        w = lcg.nextIntRange(3,12);
-        h = lcg.nextIntRange(3,12);
-    fillRect(x, y, x+w, y+h,0,0);
+  fillRect(0,0,mapWidth,mapHeight,1,1);
+  for(let i = 0; i < 100000; i++){
+    roomCandidate = {
+      x: lcg.nextIntRange(5, WIDTH-15),
+      y: lcg.nextIntRange(5, HEIGHT-15),
+      width: lcg.nextIntRange(7,14),
+      height: lcg.nextIntRange(7,14)
+    }
+    collides = rooms.some(roomInArray =>{return rectCollision(roomCandidate, roomInArray)})
+    if(!collides){rooms.push(roomCandidate)}; 
   }
-  for(let i = 0; i < 10; i++){
-    let x = 10//i * (WIDTH-10)/20;
-        y = i * (HEIGHT-10)/10 + 5;       
-        
-    fillRect(x, y, x+WIDTH-30, y+1,0,0);
-  }
-  fillRect(this.mapWidth/2-2, this.mapHeight/2-2,this.mapWidth/2+2,this.mapWidth/2+2,0,0);
-  fillRect(0,0,WIDTH,5,1,1);
-  fillRect(0,0,5,HEIGHT,1,1);
-  fillRect(WIDTH-5,0,WIDTH,HEIGHT,1,1);
-  fillRect(0,HEIGHT-5,WIDTH,HEIGHT,1);
+    rooms.forEach(drawRoom);
+    drawCorridor(300);
 
+  //---------for visual variation, data filled here is used to se dither per sub-tile
   for(var i = BACKGROUND; i <= BACKGROUND+PAGESIZE; i++){
     ram[i] = tileng.nextIntRange(0,15);
   }
+  // renderTarget=MIDGROUND;
+  // fillRect(0,0,mapWidth,mapHeight,61,61);
+  // for(var i = 0; i < 100; i++){
+  //   fillCircle(lcg.nextInt(0,mapWidth), lcg.nextIntRange(0,mapHeight), lcg.nextIntRange(8,16), 4,4);
+  // }
   renderTarget = SCREEN;
 }
 
-createSwitches = e => {
-  // var x = player.x/tileWidth|0, y = player.y/tileHeight|0;
-  // renderTarget = COLLISION;
-  //   setColors(2,2);
-  //   pset(x,y);
-  // renderTarget = SCREEN;
 
-  // switches.push( {
-  //       x: x, y: y,
-  //       index: COLLISION + y*mapWidth + x,
-  //       color: 7,
-  //       state: 0 //lcg.nextIntRange(0,2)
-  //     })
-
-   for(let i = 0; i < 1000; i++){
-   var x = lcg.nextIntRange(5, 320);
-   var y = lcg.nextIntRange(5, 200);
-   var colors = [7,7,28,18];
-   if(!pget(x,y,COLLISION)){
+drawRoom = r => {
+  //renderTarget = COLLISION;
+  setColors(0,0);
+  fillRect(r.x,r.y,r.x+r.width,r.y+r.height,0,0);
+  rect(r.x, r.y, r.x+r.width+1, r.y+r.height+1,1,1);
+  setColors(0,0);
+  line(r.x-3,r.y+r.height/2, r.x+r.width+3, r.y+r.height/2);
+  line(r.x+r.width/2,r.y-3, r.x+r.width/2, r.y+r.height+3);
+}
+drawCorridor = e => {
+  var x = 0, y = 0
+  for(let i = 0; i < e; i++){
+    for(let i = 0; i < 50000;i++){
+      x = lcg.nextIntRange(0,mapWidth);
+      y = lcg.nextIntRange(0,mapHeight);
+      if(pget(x,y,COLLISION)==1)break;
+    }
     renderTarget = COLLISION;
-    setColors(2,2);
+    setColors(0,0);
     pset(x,y);
-    renderTarget = SCREEN;
-    switches.push( {
-      x: x, y: y,
-      index: COLLISION + y*mapWidth + x,
-      color: colors[lcg.nextIntRange(0,3)],
-      state: 0 //lcg.nextIntRange(0,2)
-    })
-   }
+    for(let i = 0; i < 100;i++){
+      let possibleDirections = "";
+      if(x+3 < mapWidth-5 && pget(x+3,y)==1)possibleDirections += "E";
+      if(x-3 > 5 && pget(x-3,y)==1)possibleDirections += "W";
+      if(y-3 > 5 && pget(x,y-3)==1)possibleDirections += "N";
+      if(y+3 < mapHeight-5 && pget(x,y+3)==1)possibleDirections += "S";
+      if(possibleDirections){
+        var move = lcg.nextIntRange(0,possibleDirections.length)
+        switch(possibleDirections[move]){
+          case "N":
+          pset(x,y-1);
+          pset(x,y-2);
+          y-=2;
+          break;
+          case "S":
+          pset(x,y+1);
+          pset(x,y+2);
+          y+=2;
+          break;
+          case "E":
+          pset(x+1,y);
+          pset(x+2,y);
+          x+=2;
+          break;
+          case "W":
+          pset(x-1,y);
+          pset(x-2,y);
+          x-=2;
+          break;
+        }
+      }
+    }
   }
+  
+}
+createSwitches = e => {
+  rooms.forEach(room=>{
+    let locs = [
+      {x: room.x+1, y:room.y+1},
+      {x: room.x+room.width-1, y:room.y+1},
+      {x: room.x+1, y:room.y+room.height-1},
+      {x: room.x+room.width-1, y:room.y+room.height-1}
+    ]
+    locs.forEach(l=>{
+      renderTarget = COLLISION;
+      setColors(2,2);
+      pset(l.x,l.y);
+      switches.push( {
+        x: l.x, y: l.y,
+        index: COLLISION + l.y*mapWidth + l.x,
+        color: colors[lcg.nextIntRange(0,3)],
+        state: 0 //lcg.nextIntRange(0,2)
+      })
+    })  
+  })
 }
 
 drawSwitches = e => {
@@ -296,12 +339,12 @@ updateCollisions = e => {
 }
 ///----------------------game stuffs-------------------
 spawnEnemies = e => {
-  for(let i = 0; i < 6000;i++){
+  for(let i = 0; i < 8000;i++){
     let x = lcg.nextIntRange(0,WIDTH);
     let y = lcg.nextIntRange(0,HEIGHT);
     let size = lcg.nextIntRange(6,23);
     if(getGID(x*tileWidth,y*tileHeight) == 0){
-      enemies.push(new Enemy(x*tileWidth,y*tileHeight,size*2,size,lcg.nextIntRange(0,3)));
+      enemies.push(new Enemy(x*tileWidth,y*tileHeight,size,size,lcg.nextIntRange(0,3)));
     }
     
   }
@@ -341,7 +384,7 @@ getMousePos = (evt) =>  {
     y: ( (evt.clientY - rect.top) * scaleY)|0,     // been adjusted to be relative to element
     pressed: evt.buttons
   }
-  console.log(mouse);   
+  //console.log(mouse);   
 }
 
 // objects.push({

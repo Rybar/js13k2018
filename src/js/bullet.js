@@ -1,4 +1,4 @@
-function Bullet(x,y,color,xspeed,yspeed, life=90){
+function Bullet(x,y,color,xspeed,yspeed, life=15){
     this.x = x;
     this.y = y;
     this.width = 4;
@@ -6,6 +6,7 @@ function Bullet(x,y,color,xspeed,yspeed, life=90){
     this.xspeed = xspeed;
     this.yspeed = yspeed;
     this.life = life;
+    this.color = color;
 
     this.draw = function(){
         this.oldX = this.x;
@@ -14,7 +15,7 @@ function Bullet(x,y,color,xspeed,yspeed, life=90){
         let sy = this.y - viewY;
         if(inView(sx,sy,24)){
             pat = dither[random()*15|0]
-            setColors(this.color, 22);
+            setColors(this.color, this.color-1);
             fillRect(sx,sy,sx+4, sy+4,this.color,22)
             pat = dither[8];
         }
