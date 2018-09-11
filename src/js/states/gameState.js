@@ -72,12 +72,33 @@
                         fillRect(x,y+cw, x+tileWidth, y+tileHeight);
 
                         if(getGID(i*tileWidth,(j+1)*tileHeight)==0){
-                            setColors(tc[2],tc[3]);
+                            pat = dither[8];
+                            setColors(tc[3],tc[4]);
                             fillRect(x,y+cw,x+tileWidth,y+tileWidth);
                             line(x,y+cw,x+tileWidth,y+cw,tc[0],tc[0]);
                             line(x,y+tileHeight-1,x+tileHeight, y+tileHeight-1, 1,1);
                         }
-                        //rect(x,y,x+tileWidth+1, y+tileHeight+1, 6,7);
+                        if(getGID(i*tileWidth,(j-1)*tileHeight)==0){
+                            line(x,y,x+tileWidth,y,tc[0],tc[0]);
+                        }
+                        if(getGID((i+1)*tileWidth,(j)*tileHeight)==0){
+                            if(getGID(i*tileWidth,(j+1)*tileHeight)==0){
+                                line(x+tileWidth-1,y,x+tileWidth-1,y+cw,tc[0],tc[0]);
+                                line(x+tileWidth-1,y+cw,x+tileWidth-1,y+tileHeight-1,1,1);
+                            }
+                            else {
+                                line(x+tileWidth-1,y,x+tileWidth-1,y+tileHeight-1,tc[0],tc[0]);
+                            }
+                        }
+                        if(getGID((i-1)*tileWidth,(j)*tileHeight)==0){
+                            if(getGID(i*tileWidth,(j+1)*tileHeight)==0){
+                                line(x,y,x,y+cw,tc[0],tc[0]);
+                                line(x,y+cw,x,y+tileHeight-1,1,1);
+                            }
+                            else {
+                                line(x,y,x,y+tileHeight-1,tc[0],tc[0]);
+                            }
+                        }
                 break;
 
                 case 2: //switches

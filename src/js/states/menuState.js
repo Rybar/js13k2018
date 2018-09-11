@@ -5,19 +5,25 @@ states.menu = {
     step: function(dt){
       
       for(let i = 0; i < 10; i++){
-        particles.push(new Particle(100,100, 5, random()*3, random()*3));
+        particles.push(new Particle(100-viewX,100-viewY, 22, random()*3, random()*3));
       }
         this.ready = soundsReady == sndData.length;
         if(!this.musicPlaying && this.ready){
             this.titleSong = playSound(sounds.titleSong, 1, 0, 0.4, true);
             this.musicPlaying = true;
         }
-        if(Key.justReleased(Key.SPACE) || Key.justReleased(Key.w) || mouse.pressed){
-           // console.log('space pressed');
-           //playSound(sounds.titleSong, 1, 0, 0.5, true);
-           state = "game";
-          // this.titleSong.sound.stop();
+        if(this.ready){
+          if(Key.justReleased(Key.SPACE) || Key.justReleased(Key.w) || mouse.pressed){
+            state = "game";
+           // this.titleSong.sound.stop();
+          }
+          if(gp){
+            if( (abs(gp.axes[0]) > .1 ) || (abs(gp.axes[1]) > .1 ) || (abs(gp.axes[2]) > .1 ) || (abs(gp.axes[3]) > .1 ) ){
+              state = "game";
+            }
+          }
         }
+        
         particles.forEach(function(o){o.update();});
 
     },
@@ -30,7 +36,8 @@ states.menu = {
         spr(0,0,WIDTH,HEIGHT,0,0,0,0,mapPal);
         
         let inc = WIDTH/sndData.length;
-        fillRect(0,0,soundsReady*inc,10,21,21);
+        pat = dither[8];
+        fillRect(0,188,soundsReady*inc,200,13,14);
         particles.forEach(function(o){o.draw()});
         setColors(22,22);
         text([
@@ -76,7 +83,7 @@ states.menu = {
           ]);
         setColors(22,22);
           text([
-            this.ready?"PRESS OR CLICK TO PLAY":"ASSETS OFFLINE. LOADING...", WIDTH/2, 190, 1, 9,
+            this.ready?"PRESS OR CLICK TO PLAY":"ASSETS OFFLINE. LOADING...", WIDTH/2, 191, 1, 9,
             'center',
             'top',
             1,

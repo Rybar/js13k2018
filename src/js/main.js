@@ -52,7 +52,7 @@ init = () => {
   
   drawMap();
   createSwitches();
-  spawnEnemies(8000);
+  spawnEnemies(12000);
   counts.totalSwitches = switches.length;
   counts.totalEnemies = enemies.length;
   counts.scores = [];
@@ -162,14 +162,14 @@ drawMap = e => {
     roomCandidate = {
       x: lcg.nextIntRange(5, WIDTH-15),
       y: lcg.nextIntRange(5, HEIGHT-15),
-      width: lcg.nextIntRange(7,14),
-      height: lcg.nextIntRange(7,14)
+      width: lcg.nextIntRange(10,20),
+      height: lcg.nextIntRange(10,20)
     }
     collides = rooms.some(roomInArray =>{return rectCollision(roomCandidate, roomInArray)})
     if(!collides){rooms.push(roomCandidate)}; 
   }
     rooms.forEach(drawRoom);
-    drawCorridor(300);
+    drawCorridor(400);
 
   //---------for visual variation, data filled here is used to se dither per sub-tile
   for(var i = BACKGROUND; i <= BACKGROUND+PAGESIZE; i++){

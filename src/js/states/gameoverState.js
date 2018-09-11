@@ -11,7 +11,7 @@ states.gameover = {
             player.y = 100*24;
             player.score = 0;
             enemies = [];
-            spawnEnemies(8000);
+            spawnEnemies(12000);
             counts.switchesActivated = 0;
             counts.enemiesKilled = 0;
             counts.totalEnemies = enemies.length;

@@ -16,7 +16,7 @@ function Bullet(x,y,color,xspeed,yspeed, life=15){
         if(inView(sx,sy,24)){
             pat = dither[random()*15|0]
             setColors(this.color, this.color-1);
-            fillRect(sx,sy,sx+4, sy+4,this.color,22)
+            fillCircle(sx,sy,2);
             pat = dither[8];
         }
     }
@@ -63,6 +63,7 @@ function Particle(x,y,color,xspeed,yspeed, life = 40){
         let sy = this.y - viewY;
         if(inView(sx,sy,24)){
             //pat = dither[random()*15|0]
+            renderTarget = SCREEN;
             setColors(this.color, this.color-1);
             pset(sx,sy);
             //pat = dither[8];
@@ -121,6 +122,9 @@ function Battery(x,y){
     this.kill = function(){
         for(let i = 0; i < 40; i++){
             particles.push(new Particle(this.x,this.y, 22, random()*3-1.5, random()*3-1.5));
+          }
+          for(let i = 0; i < 50; i++){
+            particles.push(new Particle(this.x,this.y, 12, cos(360/i)*3, sin(360/i)*3,20));
           }
         playSound(sounds.batteryPickup,1,0,.6,0);
         batteries.splice(batteries.indexOf(this),1);

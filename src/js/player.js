@@ -162,15 +162,15 @@ player = {
             }
         }
         
-        if(Key.isDown(Key.c)){
-            //console.log('bullet spawned');
-            if(t%10<1){
-                let xspeed = this.xm * 5;
-                let yspeed = this.ym * 5;
-                bullets.push(new Bullet(this.x+3,this.y+5, 5, xspeed, yspeed))
-            }
+        // if(Key.isDown(Key.c)){
+        //     //console.log('bullet spawned');
+        //     if(t%10<1){
+        //         let xspeed = this.xm * 5;
+        //         let yspeed = this.ym * 5;
+        //         bullets.push(new Bullet(this.x+3,this.y+5, 5, xspeed, yspeed))
+        //     }
             
-        }
+        // }
 
         
         
