@@ -145,7 +145,7 @@ player = {
                             playSound(sounds.cellComplete,1,0,0.7,0);
                             score += 20000*multiplier;
                             renderTarget = MIDGROUND;
-                            fillCircle(player.x/tileWidth,player.y/tileWidth, 4, 1, 1);
+                            fillCircle(player.x/tileWidth,player.y/tileWidth, 4, foundSwitch.color, foundSwitch.color);
                             renderTarget = SCREEN;
                         }
                         playSound(sounds.powerLevel,1,0,0.7,0);

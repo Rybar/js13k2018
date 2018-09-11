@@ -105,7 +105,7 @@ function Battery(x,y){
                 multiplier++;
             }
             for(let i = 0; i < 3; i++){
-                particles.push(new Particle(this.x+random()*4|0,this.y, 12, random()*.2-.1, random()*-2,5));
+                particles.push(new Particle(this.x+random()*4|0,this.y, random()*63|0, random()*.2-.1, random()*-2,5));
             }
         }
     }
@@ -113,7 +113,7 @@ function Battery(x,y){
     this.draw = function(){
         let sx = this.x-viewX, sy = this.y-viewY
         if(inView(sx,sy)){
-            setColors(10,11)
+            setColors(random()*63|0,random()*63|0)
             fillCircle(sx+2,sy+2,2);
         }
     }

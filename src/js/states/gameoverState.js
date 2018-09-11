@@ -12,6 +12,9 @@ states.gameover = {
             player.score = 0;
             enemies = [];
             spawnEnemies(8000);
+            counts.switchesActivated = 0;
+            counts.enemiesKilled = 0;
+            counts.totalEnemies = enemies.length;
             switches = [];
             createSwitches();
             renderTarget = MIDGROUND;
@@ -29,7 +32,7 @@ states.gameover = {
         spr(0,0,WIDTH,HEIGHT,0,0,0,0,mapPal);
         switches.forEach(s => {
             if(s.state ==4){
-                setColors(s.color,s.color);
+                setColors(22,22);
                 pset(s.x,s.y);
             }
         })

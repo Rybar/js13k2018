@@ -249,8 +249,8 @@ createSwitches = e => {
       switches.push( {
         x: l.x, y: l.y,
         index: COLLISION + l.y*mapWidth + l.x,
-        color: colors[lcg.nextIntRange(0,3)],
-        state: 0 //lcg.nextIntRange(0,2)
+        color: lcg.nextIntRange(1,5),
+        state: 0 //lcg.nextIntRange(0,2
       })
     })  
   })
@@ -269,10 +269,11 @@ drawSwitches = e => {
           pat = dither[8];
           y = s.y * tileHeight - viewY;
           x = s.x * tileWidth - viewX;
+          pat = dither[random()*16|0];
           fillRect(x+4,y+4, x+tileWidth-4, y+tileHeight-4, s.color, 22);
-          for(let i = 0; i < 40; i++){
-            particles.push(new Particle(x,y, 22, random()*3-1.5, random()*3-1.5));
-          }
+          // for(let i = 0; i < 40; i++){
+          //   particles.push(new Particle(s.x*tileWidth,y*tileHeight, 22, random()*3-1.5, random()*3-1.5));
+          // }
         break;
         case 3: //on
           pat = dither[8];
