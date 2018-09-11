@@ -40,13 +40,38 @@ player = {
 
     },
 
-    fire: function(){
-        if(t%7<1){
-            let scalar = hypot(gp.axes[2], gp.axes[3]);
-            //let xspeed = gp.axes[2] * 6, yspeed = gp.axes[3] * 6
-            let xspeed = gp.axes[2] / scalar * 6, yspeed = gp.axes[3] / scalar * 6;
-            bullets.push(new Bullet(this.x+3,this.y+5, 9, xspeed, yspeed))
-            playSound(sounds.sndGun, 1, 0, 0.5, 0);
+    fire: function(type){
+        var areaType = pget(this.x/tileWidth|0, this.y/tileHeight|0, MIDGROUND);
+        
+        if(type){ //gamepad
+            var xspeed = gp.axes[2] / scalar * 6, yspeed = gp.axes[3] / scalar * 6;
+            var scalar = hypot(gp.axes[2], gp.axes[3]);
+        }
+        else{ //mouse
+            var sx = this.x - viewX;
+            var sy = this.y - viewY;
+            var dx = mouse.x - sx;
+            var dy = mouse.y - sy;
+            var scalar = hypot(dx,dy);
+            xspeed = dx/scalar * 6, yspeed = dy/scalar * 6
+        }
+
+        switch(areaType){
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            if(t%2<1){
+                bullets.push(new Bullet(this.x+3,this.y+5, 12, xspeed+random()*.02, yspeed+random()*.02,90))
+                playSound(sounds.sndGun, 1, 0, 0.5, 0);
+            }
+            break;
+            default:
+            if(t%7<1){
+                bullets.push(new Bullet(this.x+3,this.y+5, 9, xspeed, yspeed))
+                playSound(sounds.sndGun, 1, 0, 0.5, 0);
+            }
+            break;
         }
     },
 
@@ -111,13 +136,13 @@ player = {
             if( (abs(gp.axes[0]) ) > .1){this.x+= this.vx * gp.axes[0]; this.steps++; }//allow for deadzone
             if( (abs(gp.axes[1]) ) > .1){ this.y+= this.vy * gp.axes[1]; this.steps++; }
 
-            if( (abs(gp.axes[2]) ) > .1){ this.fire(); }
-            if( (abs(gp.axes[3]) ) > .1){ this.fire(); }
+            if( (abs(gp.axes[2]) ) > .1){ this.fire(1); }
+            if( (abs(gp.axes[3]) ) > .1){ this.fire(1); }
             
            
           }
 
-          if(mouse.pressed == 1){ this.mouseFire();}
+          if(mouse.pressed == 1){ this.fire(0);}
 
         //--collision response--
         if(getGID(this.x, this.y) == 1 ||
