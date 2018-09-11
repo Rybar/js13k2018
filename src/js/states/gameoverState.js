@@ -50,7 +50,7 @@ states.gameover = {
           ]);
           setColors(7,7);
           text([
-            counts.enemiesKilled + " ACHROMAS VANQUISHED\n" + counts.switchesActivated + " CHROMA NODES RESTORED" , WIDTH/2, 140, 2, 7,
+            counts.enemiesKilled + " ACHROMATS VANQUISHED\n" + counts.switchesActivated + " CHROMA NODES RESTORED" , WIDTH/2, 140, 2, 7,
             'center',
             'top',
             1,

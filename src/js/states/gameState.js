@@ -131,7 +131,7 @@
         //score---------------------------
         setColors(22,22);
         text([
-            'SCORE ' + score.pad(12), WIDTH-5, 5, 1, 1,
+            'SCORE ' + ''+multiplier.pad(3) + 'X ' + score.pad(9), WIDTH-5, 5, 1, 1,
             'right',
             'top',
             1,

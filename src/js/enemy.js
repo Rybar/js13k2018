@@ -1,5 +1,5 @@
 function Enemy(x,y, health, size=8, color=0) {
-    this.colors=[18,12,27,19];
+    this.colors=[58,59,38,39];
     this.color = colors[color];
     this.x = x;
     this.y = y;
@@ -69,8 +69,8 @@ function Enemy(x,y, health, size=8, color=0) {
                 this.biting = true;
             }
             if(this.hit){
-                this.health-=2; //temp
-                score += 5;
+                this.health-=3; 
+                score += 5*multiplier;
                 this.hit = false;
             }
             if(getGID(this.x,this.y) == 1 ||
@@ -90,8 +90,15 @@ function Enemy(x,y, health, size=8, color=0) {
         sndMod = this.width.map(0,32,1.7,0);
         playSound(sounds.sndSplode1, 1+sndMod, 0, 0.7, false);
         fillCircle(sx+this.width/2, sy+this.width/2, this.width*2, 22, 22);
+        let emod1 = random(), emod2 = random(), emod3 = random(), emod4 = random();
         for(let i = 0; i < 40; i++){
             particles.push(new Particle(this.x,this.y, 7, random()*3-1.5, random()*3-1.5));
+          }
+          for(let i = 0; i < 50; i++){
+            particles.push(new Particle(this.x,this.y, 19, cos(360/i)*(emod1), sin(360/i)*(1+emod2),15));
+          }
+          for(let i = 0; i < 50; i++){
+            particles.push(new Particle(this.x,this.y, 19, cos(360/i)*(1+emod3), sin(360/i)*(emod4),15));
           }
         if(random()>.5){
             batteries.push(new Battery(this.x+1, this.y+1));
