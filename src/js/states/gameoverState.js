@@ -3,29 +3,60 @@ states.gameover = {
     step: function(dt){
         if(Key.justReleased(Key.SPACE)){
            // console.log('space pressed');
+            //reset();
             player.health = 100;
-            player.x = 180*tileWidth;
-            player.y = 100*tileWidth;
-            state = "game";
+            player.score = 0;
+            player.batteries = 20;
+            player.x = 160*24;
+            player.y = 100*24;
+            player.score = 0;
+            enemies = [];
+            spawnEnemies(8000);
+            switches = [];
+            createSwitches();
+            renderTarget = MIDGROUND;
+            fillRect(0,0,mapWidth,mapHeight,0,0);
+            renderTarget = SCREEN;
+            state = 'game';
         }
-
     },
     
     draw: function(dt){
+        renderTarget = SCREEN;
+        clear(0);
+        renderSource = COLLISION;
+        mapPal = [1,31];
+        spr(0,0,WIDTH,HEIGHT,0,0,0,0,mapPal);
+        switches.forEach(s => {
+            if(s.state ==4){
+                setColors(s.color,s.color);
+                pset(s.x,s.y);
+            }
+        })
+        
        
         // fillRect(0,0,20,20,4);,
-        clear(0);
-        setColors(0,4);
+        setColors(0,5);
         text([
-            'GAME\nOVER', WIDTH/2, 30, 3, 9,
+            'GAME OVER', WIDTH/2, 20, 3, 9,
             'center',
             'top',
-            10,
+            6,
             4,
             16,10,3
           ]);
+          setColors(7,7);
           text([
-            'PRESS SPACE TO PLAY AGAIN', WIDTH/2, 160, 2, 9,
+            counts.enemiesKilled + " ACHROMAS VANQUISHED\n" + counts.switchesActivated + " CHROMA NODES RESTORED" , WIDTH/2, 140, 2, 7,
+            'center',
+            'top',
+            1,
+            7,
+            0
+          ]);
+          setColors(22,22);
+          text([
+            'PRESS SPACE TO PLAY AGAIN', WIDTH/2, 165, 2, 9,
             'center',
             'top',
             1,

@@ -5,6 +5,7 @@ const mapWidth = 320;
 const mapHeight = 200;
 
 score=0;
+multiplier=1;
 rooms = [];
 switches = [];
 enemies = []; 
@@ -15,6 +16,7 @@ batteries = [];
 states = {};
 gp = false;
 mouse = {x:0, y:0, pressed:false}
+counts = {};
 
 lcg = new LCG(1019);
 tileng = new LCG(42);
@@ -50,7 +52,10 @@ init = () => {
   
   drawMap();
   createSwitches();
-  spawnEnemies();
+  spawnEnemies(8000);
+  counts.totalSwitches = switches.length;
+  counts.totalEnemies = enemies.length;
+  counts.scores = [];
 
   state = "menu";
   last = 0;
@@ -170,11 +175,6 @@ drawMap = e => {
   for(var i = BACKGROUND; i <= BACKGROUND+PAGESIZE; i++){
     ram[i] = tileng.nextIntRange(0,15);
   }
-  // renderTarget=MIDGROUND;
-  // fillRect(0,0,mapWidth,mapHeight,61,61);
-  // for(var i = 0; i < 100; i++){
-  //   fillCircle(lcg.nextInt(0,mapWidth), lcg.nextIntRange(0,mapHeight), lcg.nextIntRange(8,16), 4,4);
-  // }
   renderTarget = SCREEN;
 }
 
@@ -270,6 +270,9 @@ drawSwitches = e => {
           y = s.y * tileHeight - viewY;
           x = s.x * tileWidth - viewX;
           fillRect(x+4,y+4, x+tileWidth-4, y+tileHeight-4, s.color, 22);
+          for(let i = 0; i < 40; i++){
+            particles.push(new Particle(x,y, 22, random()*3-1.5, random()*3-1.5));
+          }
         break;
         case 3: //on
           pat = dither[8];
@@ -339,7 +342,7 @@ updateCollisions = e => {
 }
 ///----------------------game stuffs-------------------
 spawnEnemies = e => {
-  for(let i = 0; i < 8000;i++){
+  for(let i = 0; i < e ;i++){
     let x = lcg.nextIntRange(0,WIDTH);
     let y = lcg.nextIntRange(0,HEIGHT);
     let size = lcg.nextIntRange(6,23);
@@ -430,6 +433,30 @@ getNeighbors = (tx,ty) => {
   return {
     N: getGID(tx,ty-1)
   }
+}
+
+reset = e => {
+  lcg.seed = 1019;
+  tileng.seed = 42;
+  player.health = 100;
+  player.x = 160*tileWidth;
+  player.y = 100*tileHeight;
+  score = 0;
+  switches = [];
+enemies = []; 
+objects = [];
+bullets = [];
+particles = [];
+batteries = [];
+//renderTarget = MIDGROUND;
+//fillRect(0,0,mapWidth,mapHeight,0,0);
+//renderTarget = SCREEN;
+player.batteries = 20;
+createSwitches();
+spawnEnemies();
+
+state = 'game';
+
 }
 
 //----- END main.js---------------

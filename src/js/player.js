@@ -80,6 +80,7 @@ player = {
         }
 
         if(player.health < 0){
+            this.kill();
             state = "gameover";
         }
 
@@ -142,7 +143,7 @@ player = {
                     if(player.batteries > 0){
                         if(foundSwitch.state == 3){
                             playSound(sounds.cellComplete,1,0,0.7,0);
-                            score += 20000
+                            score += 20000*multiplier;
                             renderTarget = MIDGROUND;
                             fillCircle(player.x/tileWidth,player.y/tileWidth, 4, 1, 1);
                             renderTarget = SCREEN;
@@ -150,7 +151,7 @@ player = {
                         playSound(sounds.powerLevel,1,0,0.7,0);
                         foundSwitch.state++;
                         player.batteries--
-                        score += 2500
+                        score += 2500*multiplier;
                     }
                     
                 }
@@ -173,6 +174,12 @@ player = {
         
         
     },
+
+    kill: function() {
+        counts.enemiesKilled = counts.totalEnemies - enemies.length;
+        counts.switchesActivated = switches.filter(s =>{return s.state == 4}).length;
+        counts.scores.push(score);
+    }
 
 
   }

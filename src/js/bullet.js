@@ -54,6 +54,7 @@ function Particle(x,y,color,xspeed,yspeed, life = 40){
     this.xspeed = xspeed;
     this.yspeed = yspeed;
     this.life = life;
+    this.color = color;
 
     this.draw = function(){
         this.oldX = this.x;
@@ -62,7 +63,7 @@ function Particle(x,y,color,xspeed,yspeed, life = 40){
         let sy = this.y - viewY;
         if(inView(sx,sy,24)){
             //pat = dither[random()*15|0]
-            setColors(7, 4);
+            setColors(this.color, this.color-1);
             pset(sx,sy);
             //pat = dither[8];
         }
@@ -101,19 +102,26 @@ function Battery(x,y){
             if(rectCollision(this,player)){
                 this.kill();
                 player.batteries++;
+                multiplier++;
             }
-            particles.push(new Particle(sx+random()*4,sy*random()*4,11,random*.1,-1,40))
+            for(let i = 0; i < 3; i++){
+                particles.push(new Particle(this.x+random()*4|0,this.y, 12, random()*.2-.1, random()*-2,5));
+            }
         }
     }
 
     this.draw = function(){
         let sx = this.x-viewX, sy = this.y-viewY
         if(inView(sx,sy)){
-            fillCircle(sx+2,sy+2,2,9);
+            setColors(10,11)
+            fillCircle(sx+2,sy+2,2);
         }
     }
 
     this.kill = function(){
+        for(let i = 0; i < 40; i++){
+            particles.push(new Particle(this.x,this.y, 22, random()*3-1.5, random()*3-1.5));
+          }
         playSound(sounds.batteryPickup,1,0,.6,0);
         batteries.splice(batteries.indexOf(this),1);
     }

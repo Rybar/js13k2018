@@ -91,12 +91,12 @@ function Enemy(x,y, health, size=8, color=0) {
         playSound(sounds.sndSplode1, 1+sndMod, 0, 0.7, false);
         fillCircle(sx+this.width/2, sy+this.width/2, this.width*2, 22, 22);
         for(let i = 0; i < 40; i++){
-            particles.push(new Particle(this.x,this.y, 22, random()*3-1.5, random()*3-1.5));
+            particles.push(new Particle(this.x,this.y, 7, random()*3-1.5, random()*3-1.5));
           }
         if(random()>.5){
             batteries.push(new Battery(this.x+1, this.y+1));
         }
-        score += 100*this.width;
+        score += 100*this.width*multiplier;
         enemies.splice( enemies.indexOf(this), 1 );
 
     }
