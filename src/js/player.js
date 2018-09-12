@@ -9,7 +9,7 @@ player = {
     height: 10,
     color: 12,
     gravity = 4,
-    health: 100,
+    health: 1000,
     tx: 0,
     ty: 0,
     steps: 0,
@@ -17,7 +17,7 @@ player = {
     hit: false,
     xm: 0,
     ym: 0,
-    batteries: 0,
+    batteries: 100,
     color: 22,
 
     draw: function(dt) {
@@ -40,26 +40,45 @@ player = {
 
     },
 
-    fire: function(type){
+    fire: function(control){
         var areaType = pget(this.x/tileWidth|0, this.y/tileHeight|0, MIDGROUND);
+        var xspeed, yspeed, scalar
         
-        if(type){ //gamepad
-            var xspeed = gp.axes[2] / scalar * 6, yspeed = gp.axes[3] / scalar * 6;
-            var scalar = hypot(gp.axes[2], gp.axes[3]);
+        if(control == 1){ //gamepad
+            scalar = hypot(gp.axes[2], gp.axes[3]);
+            xspeed = gp.axes[2] / scalar * 6, yspeed = gp.axes[3] / scalar * 6;
+            
         }
-        else{ //mouse
+        else if(control==0){ //mouse
             var sx = this.x - viewX;
             var sy = this.y - viewY;
             var dx = mouse.x - sx;
             var dy = mouse.y - sy;
-            var scalar = hypot(dx,dy);
+            scalar = hypot(dx,dy);
             xspeed = dx/scalar * 6, yspeed = dy/scalar * 6
         }
 
         switch(areaType){
             case 1:
+            if(t%7<1){
+                bullets.push(new Bullet(this.x+3,this.y+5, 27, xspeed, yspeed))
+                playSound(sounds.sndGun, 1, 0, 0.5, 0);
+            }
+            break;
             case 2:
+            if(t%7<1){
+                bullets.push(new Bullet(this.x+3,this.y+5, 11, xspeed+sin1(10), yspeed+cos1(10)))
+                bullets.push(new Bullet(this.x+3,this.y+5, 11, xspeed, yspeed))
+                bullets.push(new Bullet(this.x+3,this.y+5, 11, xspeed-sin1(10), yspeed-cos1(10)))
+                playSound(sounds.sndGun, 1, 0, 0.5, 0);
+            }
+            break;
             case 3:
+            if(t%2<1){
+                bullets.push(new Bullet(this.x+3,this.y+5, 20, xspeed+random()*.02, yspeed+random()*.02,90))
+                playSound(sounds.sndGun, 1, 0, 0.5, 0);
+            }
+            break;
             case 4:
             if(t%2<1){
                 bullets.push(new Bullet(this.x+3,this.y+5, 12, xspeed+random()*.02, yspeed+random()*.02,90))
@@ -145,16 +164,31 @@ player = {
           if(mouse.pressed == 1){ this.fire(0);}
 
         //--collision response--
-        if(getGID(this.x, this.y) == 1 ||
-           getGID(this.x+this.width, this.y) ==1 ||
-           getGID(this.x+this.width, this.y+this.height) ==1 ||
-           getGID(this.x, this.y+this.height) == 1 
+        // if(getGID(this.x, this.y) == 1 ||
+        //    getGID(this.x+this.width, this.y) ==1 ||
+        //    getGID(this.x+this.width, this.y+this.height) ==1 ||
+        //    getGID(this.x, this.y+this.height) == 1 
+        //    ){
+        //     //this.xVel = 0;
+        //     this.x = this.oldX;
+        //     this.y = this.oldY;
+        // }
+        if(getGID(this.x, this.oldY) == 1 ||
+           getGID(this.x+this.width, this.oldY) ==1 ||
+           getGID(this.x+this.width, this.oldY+this.height) ==1 ||
+           getGID(this.x, this.oldY+this.height) == 1 
+           ){
+                this.x = this.oldX;
+            }
+
+        if(getGID(this.oldX, this.y) == 1 ||
+           getGID(this.oldX+this.width, this.y) ==1 ||
+           getGID(this.oldX+this.width, this.y+this.height) ==1 ||
+           getGID(this.oldX, this.y+this.height) == 1 
            ){
             //this.xVel = 0;
-            this.x = this.oldX;
             this.y = this.oldY;
-        }
-
+            }
         
         let onSwitch = (getGID(this.x, this.y) == 2 ||
         getGID(this.x+this.width-1, this.y) ==2 ||

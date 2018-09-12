@@ -1,6 +1,6 @@
 //-----main.js---------------
-const tileWidth = 24;
-const tileHeight = 24;
+const tileWidth = 20;
+const tileHeight = 20;
 const mapWidth = 320;
 const mapHeight = 200;
 
@@ -65,8 +65,8 @@ init = () => {
   audioMaster = audioCtx.createGain();
   audioMaster.connect(audioCtx.destination);
 
-  deadzoneX = 70;
-  deadzoneY = 70;
+  deadzoneX = 100;
+  deadzoneY = 80;
 
   viewX = player.x-WIDTH/2;
   
@@ -162,8 +162,8 @@ drawMap = e => {
     roomCandidate = {
       x: lcg.nextIntRange(5, WIDTH-15),
       y: lcg.nextIntRange(5, HEIGHT-15),
-      width: lcg.nextIntRange(10,20),
-      height: lcg.nextIntRange(10,20)
+      width: lcg.nextIntRange(7,16),
+      height: lcg.nextIntRange(7,16)
     }
     collides = rooms.some(roomInArray =>{return rectCollision(roomCandidate, roomInArray)})
     if(!collides){rooms.push(roomCandidate)}; 
@@ -239,8 +239,11 @@ createSwitches = e => {
     let locs = [
       {x: room.x+1, y:room.y+1},
       {x: room.x+room.width-1, y:room.y+1},
-      {x: room.x+1, y:room.y+room.height-1},
-      {x: room.x+room.width-1, y:room.y+room.height-1}
+      {x: room.x+1, y:room.y+room.height},
+      {x: room.x+room.width-1, y:room.y+room.height},
+      {x: lcg.nextIntRange(room.x, room.x+room.width), y:lcg.nextIntRange(room.y, room.x+room.height)},
+      {x: lcg.nextIntRange(room.x, room.x+room.width), y:lcg.nextIntRange(room.y, room.x+room.height)},
+      {x: lcg.nextIntRange(room.x, room.x+room.width), y:lcg.nextIntRange(room.y, room.x+room.height)},
     ]
     locs.forEach(l=>{
       renderTarget = COLLISION;
@@ -346,7 +349,7 @@ spawnEnemies = e => {
   for(let i = 0; i < e ;i++){
     let x = lcg.nextIntRange(0,WIDTH);
     let y = lcg.nextIntRange(0,HEIGHT);
-    let size = lcg.nextIntRange(6,23);
+    let size = lcg.nextIntRange(5,19);
     if(getGID(x*tileWidth,y*tileHeight) == 0){
       enemies.push(new Enemy(x*tileWidth,y*tileHeight,size,size,lcg.nextIntRange(0,3)));
     }
