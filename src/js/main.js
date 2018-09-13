@@ -46,9 +46,9 @@ init = () => {
       e.gamepad.buttons.length, e.gamepad.axes.length;
   });
 
-  stats = new Stats();
-  stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-  document.body.appendChild( stats.dom );
+  //stats = new Stats();
+  //stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+  //document.body.appendChild( stats.dom );
   c.addEventListener("mousemove", getMousePos);
   c.addEventListener("mousedown", getMousePos);
   //w.addEventListener("click", getMousePos);
@@ -114,7 +114,7 @@ init = () => {
 }
 
 loop = e => {
-  stats.begin();
+  //stats.begin();
   var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
 gp = gamepads[0];
 //mouse = getMousePos(e);
@@ -149,7 +149,7 @@ gp = gamepads[0];
   Key.update();
   render(e);
 
- stats.end();
+ //stats.end();
   requestAnimationFrame(loop);
 }
 
