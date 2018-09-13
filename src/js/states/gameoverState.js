@@ -5,7 +5,7 @@ states.gameover = {
            // console.log('space pressed');
             //reset();
             player.health = 100;
-            player.score = 0;
+            score = 0;
             player.batteries = 20;
             player.x = 160*24;
             player.y = 100*24;
