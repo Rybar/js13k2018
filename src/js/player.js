@@ -9,7 +9,7 @@ player = {
     height: 10,
     color: 12,
     gravity = 4,
-    health: 1000,
+    health: 100,
     tx: 0,
     ty: 0,
     steps: 0,
@@ -61,28 +61,31 @@ player = {
         switch(areaType){
             case 1:
             if(t%7<1){
-                bullets.push(new Bullet(this.x+3,this.y+5, 27, xspeed, yspeed))
+                bullets.push(new Bullet(this.x+3,this.y+5, 27, xspeed, yspeed, 100, 1))
                 playSound(sounds.sndGun, 1, 0, 0.5, 0);
             }
             break;
             case 2:
-            if(t%7<1){
-                bullets.push(new Bullet(this.x+3,this.y+5, 11, xspeed+sin1(10), yspeed+cos1(10)))
+            if(t%14<1){
+                bullets.push(new Bullet(this.x+3,this.y+5, 11, xspeed+sin1(.1), yspeed+cos1(.1)))
                 bullets.push(new Bullet(this.x+3,this.y+5, 11, xspeed, yspeed))
-                bullets.push(new Bullet(this.x+3,this.y+5, 11, xspeed-sin1(10), yspeed-cos1(10)))
+                bullets.push(new Bullet(this.x+3,this.y+5, 11, xspeed-sin1(.2), yspeed-cos1(.2)))
+                bullets.push(new Bullet(this.x+3,this.y+5, 11, xspeed-sin1(.3), yspeed-cos1(.3)))
+                bullets.push(new Bullet(this.x+3,this.y+5, 11, xspeed-sin1(.4), yspeed-cos1(.4)))
+                bullets.push(new Bullet(this.x+3,this.y+5, 11, xspeed-sin1(.5), yspeed-cos1(.5)))
                 playSound(sounds.sndGun, 1, 0, 0.5, 0);
             }
             break;
             case 3:
             if(t%2<1){
-                bullets.push(new Bullet(this.x+3,this.y+5, 20, xspeed+random()*.02, yspeed+random()*.02,90))
+                bullets.push(new Bullet(this.x+3,this.y+5, 20, xspeed*cos(t), yspeed*sin(t),90))
                 playSound(sounds.sndGun, 1, 0, 0.5, 0);
             }
             break;
             case 4:
             if(t%2<1){
-                bullets.push(new Bullet(this.x+3,this.y+5, 12, xspeed+random()*.02, yspeed+random()*.02,90))
-                playSound(sounds.sndGun, 1, 0, 0.5, 0);
+                bullets.push(new Bullet(this.x+3,this.y+5, 7+round(random()*3-1.5), xspeed/3.5+random()*.4-.8, yspeed/3.5+random()*.4-.8,40))
+                playSound(sounds.sndGun, .7, 0, 0.5, 0);
             }
             break;
             default:

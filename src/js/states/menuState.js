@@ -9,17 +9,21 @@ states.menu = {
       }
         this.ready = soundsReady == sndData.length;
         if(!this.musicPlaying && this.ready){
-            this.titleSong = playSound(sounds.titleSong, 1, 0, 0.4, true);
+            titleMusic = playSound(sounds.titleSong, 1, 0, 0.4, true);
             this.musicPlaying = true;
         }
         if(this.ready){
           if(Key.justReleased(Key.SPACE) || Key.justReleased(Key.w) || mouse.pressed){
             state = "game";
-           // this.titleSong.sound.stop();
+           titleMusic.sound.stop();
+           gameMusic = playSound(sounds.gameSong, 1, 0, 0.2, true);
+
           }
-          if(gp){
+          else if(gp){
             if( (abs(gp.axes[0]) > .1 ) || (abs(gp.axes[1]) > .1 ) || (abs(gp.axes[2]) > .1 ) || (abs(gp.axes[3]) > .1 ) ){
               state = "game";
+              titleMusic.sound.stop();
+              gameMusic = playSound(sounds.gameSong, 1, 0, 0.4, true);
             }
           }
         }

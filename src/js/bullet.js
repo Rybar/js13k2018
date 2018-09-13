@@ -1,4 +1,4 @@
-function Bullet(x,y,color,xspeed,yspeed, life=15){
+function Bullet(x,y,color,xspeed,yspeed, life=15, type=0){
     this.x = x;
     this.y = y;
     this.width = 4;
@@ -7,6 +7,7 @@ function Bullet(x,y,color,xspeed,yspeed, life=15){
     this.yspeed = yspeed;
     this.life = life;
     this.color = color;
+    this.type = type;
 
     this.draw = function(){
         this.oldX = this.x;
@@ -29,7 +30,17 @@ function Bullet(x,y,color,xspeed,yspeed, life=15){
         let sx = this.x - viewX;
         let sy = this.y - viewY;
 
-        if(getGID(this.x,this.y) == 1)this.kill();
+        if(getGID(this.x,this.y) == 1){
+            switch(this.type){
+                case 1:
+                this.xspeed = -this.xspeed;
+                this.yspeed = -this.yspeed;
+                default:
+                this.kill();
+                break;
+            }
+            
+        }
         
         if(this.life < 0)this.kill();
         
@@ -107,6 +118,13 @@ function Battery(x,y){
             }
             for(let i = 0; i < 3; i++){
                 particles.push(new Particle(this.x+random()*4|0,this.y, random()*63|0, random()*.2-.1, random()*-2,5));
+            }
+            let xdelta = player.x-this.x, ydelta = player.y-this.y,
+                distance = sqrt((ydelta*ydelta+xdelta*xdelta)),
+                angle = atan2(ydelta, xdelta);
+            if(distance < 20){
+                this.x += cos(angle)*3;
+                this.y += sin(angle)*3;
             }
         }
     }

@@ -18,6 +18,9 @@ gp = false;
 mouse = {x:0, y:0, pressed:false}
 counts = {};
 
+titleMusic = {};
+gameMusic = {};
+
 lcg = new LCG(1019);
 tileng = new LCG(42);
 
@@ -81,7 +84,8 @@ init = () => {
     {name:'titleSong', data: titleSong},
     {name:'batteryPickup', data: batteryPickup},
     {name:'cellComplete', data: cellComplete},
-    {name:'powerLevel',data:powerLevel}
+    {name:'gameSong', data: gameSong},
+    {name:'powerLevel',data:powerLevel},
     ]
   //music stuff-----------------------------------------------------
   sndData.forEach(function(o){

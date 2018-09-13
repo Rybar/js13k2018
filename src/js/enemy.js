@@ -76,15 +76,32 @@ function Enemy(x,y, health, size=8, color=0) {
                 this.health-=3; 
                 score += 5*multiplier;
                 this.hit = false;
+                
             }
-            if(getGID(this.x,this.y) == 1 ||
-               getGID(this.x+this.width, this.y) == 1 ||
-               getGID(this.x+this.width, this.y+this.height) == 1 ||
-               getGID(this.x, this.y+this.height) == 1
-            ){
+            // if(getGID(this.x,this.y) == 1 ||
+            //    getGID(this.x+this.width, this.y) == 1 ||
+            //    getGID(this.x+this.width, this.y+this.height) == 1 ||
+            //    getGID(this.x, this.y+this.height) == 1
+            // ){
+            //     this.x = this.oldX;
+            //     this.y = this.oldY;
+            // } 
+            if(getGID(this.x, this.oldY) == 1 ||
+           getGID(this.x+this.width, this.oldY) ==1 ||
+           getGID(this.x+this.width, this.oldY+this.height) ==1 ||
+           getGID(this.x, this.oldY+this.height) == 1 
+           ){
                 this.x = this.oldX;
-                this.y = this.oldY;
-            } 
+            }
+
+        if(getGID(this.oldX, this.y) == 1 ||
+           getGID(this.oldX+this.width, this.y) ==1 ||
+           getGID(this.oldX+this.width, this.y+this.height) ==1 ||
+           getGID(this.oldX, this.y+this.height) == 1 
+           ){
+            //this.xVel = 0;
+            this.y = this.oldY;
+            }
         }   
     } //end update
 

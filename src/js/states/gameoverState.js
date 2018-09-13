@@ -11,12 +11,14 @@ states.gameover = {
             player.y = 100*24;
             player.score = 0;
             enemies = [];
+            batteries = [];
             spawnEnemies(12000);
             counts.switchesActivated = 0;
             counts.enemiesKilled = 0;
             counts.totalEnemies = enemies.length;
-            switches = [];
-            createSwitches();
+            switches.forEach(s=>{s.state = 0});
+            //createSwitches();
+            
             renderTarget = MIDGROUND;
             fillRect(0,0,mapWidth,mapHeight,0,0);
             renderTarget = SCREEN;
@@ -39,18 +41,27 @@ states.gameover = {
         
        
         // fillRect(0,0,20,20,4);,
-        setColors(0,5);
+        setColors(7,7)
         text([
-            'GAME OVER', WIDTH/2, 20, 3, 9,
+            'THIS GAME MADE POSSIBLE BY\nTHE AMAZING TRAVIS GERLECZ\nWHO LENT ME HIS LAPTOP\nFOR THE MONTH OF JS13K', WIDTH/2, 10, 2, 3,
             'center',
             'top',
-            6,
+            1,
+            7,
+            0
+          ]);
+        setColors(0,5);
+        text([
+            'GAME OVER', WIDTH/2, 80, 3, 9,
+            'center',
+            'top',
+            4,
             4,
             16,10,3
           ]);
           setColors(7,7);
           text([
-            counts.enemiesKilled + " ACHROMATS VANQUISHED\n" + counts.switchesActivated + " CHROMA NODES RESTORED" , WIDTH/2, 140, 2, 7,
+            counts.enemiesKilled + " ACHROMATS VANQUISHED\n" + counts.switchesActivated + " CHROMA NODES RESTORED" , WIDTH/2, 150, 2, 7,
             'center',
             'top',
             1,
@@ -59,7 +70,7 @@ states.gameover = {
           ]);
           setColors(22,22);
           text([
-            'PRESS SPACE TO PLAY AGAIN', WIDTH/2, 165, 2, 9,
+            'PRESS SPACE TO PLAY AGAIN', WIDTH/2, 175, 2, 9,
             'center',
             'top',
             1,
