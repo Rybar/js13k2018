@@ -17,7 +17,7 @@ player = {
     hit: false,
     xm: 0,
     ym: 0,
-    batteries: 100,
+    batteries: 4,
     color: 22,
 
     draw: function(dt) {

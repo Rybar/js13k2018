@@ -355,7 +355,11 @@ spawnEnemies = e => {
     let y = lcg.nextIntRange(0,HEIGHT);
     let size = lcg.nextIntRange(5,19);
     if(getGID(x*tileWidth,y*tileHeight) == 0){
-      enemies.push(new Enemy(x*tileWidth,y*tileHeight,size,size,lcg.nextIntRange(0,3)));
+      if( (x*tileWidth > player.x+100 || x*tileWidth < player.x-100) &&
+        (y*tileHeight > player.y+100 || y*tileHeight < player.x-100) ){
+          enemies.push(new Enemy(x*tileWidth,y*tileHeight,size,size,lcg.nextIntRange(0,3)));
+        }
+      
     }
     
   }
